@@ -454,7 +454,7 @@ sent
 
 In Python, we give the items we're working with names, a process called assignment. For instance, in the NLTK corpus, 'Sense and Sensibility' has been assigned the name 'text2', which is much easier to work with.
 
-We also assigend the name 'sent' to the sentence that we created in the previous exercise, so that we could then instruct Python to do various things with it. Assigning a variable in python looks like this:
+We also assigned the name `sent` to the sentence that we created in the previous exercise, so that we could then instruct Python to do various things with it. Assigning a variable in Python looks like this:
 
     variable = expression
 
