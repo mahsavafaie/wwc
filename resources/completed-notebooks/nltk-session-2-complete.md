@@ -50,7 +50,7 @@ This file is available online, at the Research Platforms [GitHub](https://github
 > Later in the course, we'll discuss how to extract data from the Web and turn this data into a corpus.
 
 ```python
-import requests # a library for working with urls 
+import requests # a library for working with urls
 url = "https://raw.githubusercontent.com/resbaz/nltk/master/corpora/oz_politics/ozpol.txt" # define the url
 response = requests.get(url, verify=False)
 raw_text = response.text
@@ -62,14 +62,14 @@ raw_text[:2000] # first 2000 characters
 Let's save the corpus to our cloud as a text file.
 
 ```python
-with open('forum.txt', 'w') as fo:
-    fo.write(raw_text.encode('utf-8'))
+with open('forum.txt', 'w', encoding='utf-8') as fo:
+    fo.write(raw_text)
 ```
 
 ```python
-f = open('forum.txt')
-raw_text = f.read()
-raw_text = unicode(raw_text.lower(), 'utf-8') # make it lowercase and unicode
+with open('forum.txt', 'r', encoding='utf-8') as f:
+    raw_text = f.read()
+raw_text = raw_text.lower() # make it lowercase
 print(len(raw_text))
 print(raw_text[:2000])
 ```
@@ -127,7 +127,7 @@ range(10)
 
 ```python
 for i in range(10):
-    print i
+    print(i)
 ```
 
 So, how would we put this to work with our `howmany()` function?
@@ -135,7 +135,7 @@ So, how would we put this to work with our `howmany()` function?
 ```python
 wordlist = ['terror', 'refugee', 'refugees', 'islam']
 for word in wordlist:
-    print word, howmany(word)
+    print(word, howmany(word))
 ```
 
 Powerful, eh? The next problem, however, is that we're stuck writing out 'refugee' and `refugees`.
@@ -144,7 +144,7 @@ Powerful, eh? The next problem, however, is that we're stuck writing out 'refuge
 
 Regular expressions are a language for searching strings of characters. For us right now, they're a language inside a language. Alphanumeric characters and some punctuation work just like normal searches, but some special characters have different meanings. You've probably already seen some of these in the wild, like the asterisk as wildcard.
 
-At their simplest, we can use `re.search()` to search 
+At their simplest, we can use `re.search()` to search
 
 re.search(r'[a-z]+ing\b', raw_text)
 
@@ -155,6 +155,7 @@ import re
 re.findall('muslims?', raw_text)
 re.findall('.*muslim.*', raw_text)
 re.findall('[^\s]+ muslims? [^\s]+', raw_text)
+from collections import Counter
 Counter(re.findall('([^\s]+) muslims? [^\s]+', raw_text)).most_common()
 ```
 
@@ -169,6 +170,7 @@ Or we could use it to stem our text:
 ```python
 regex = re.compile(r'([a-z]+)(ing|s|ed|er)([^a-z])')
 re.sub(regex, r'\1\3', raw_text)
+```
 
 Can you update `howmany()` to handle a regular expression? Use our `flat` corpus if it's easier.
 
@@ -280,7 +282,7 @@ immediately adjacent words. So, let's expand out search to a window of *five
 words either side*
 
 ```python
-# ''window size'' specifies the distance at which 
+# ''window size'' specifies the distance at which
 # two tokens can still be considered collocates
 finder = BigramCollocationFinder.from_words(tokens, window_size=5)
 ```
@@ -350,7 +352,7 @@ def ngrammer(text, gramsize = 3, threshold = 4):
     if type(text) != list:
         text = nltk.word_tokenize(text)
     # skip punctuation?
-    # 
+    #
     ngms = ngrams(text, gramsize)
     cntr = Counter(ngms)
     return Counter({k: v for k, v in cntr.items() if v >= threshold})
