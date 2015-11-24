@@ -37,17 +37,22 @@ a well-known critique, Henry Widdowson ([2000, p. 6-7](#ref:widdowson)) said:
 
 ## Loading a corpus
 
-First, we have to load a corpus. We'll use a text file containing posts to [an Australian online forum](http://www.ozpolitic.com/forum/YaBB.pl?board=global) for discussing politics. It's full of very interesting natural language data!
+First, we have to load a corpus. We'll use a text file containing posts to an Australian online forum for discussing politics. It's full of very interesting natural language data!
+
+```python
+from IPython.display import display
+from IPython.display import HTML
+HTML('<iframe src=http://www.ozpolitic.com/forum/YaBB.pl?board=global width=700 height=350></iframe>')
+```
 
 This file is available online, at the Research Platforms [GitHub](https://github.com/resbaz/nltk). We can ask Python to get it for us.
 
 > Later in the course, we'll discuss how to extract data from the Web and turn this data into a corpus.
 
 ```python
-import requests # a library for working with urls 
-url = 'http://git.io/v47HI'
-# url = "https://raw.githubusercontent.com/resbaz/nltk/master/corpora/oz_politics/ozpol.txt" # define the url
-response = requests.get(url) # `verify=False` if need be
+import requests # a library for working with urls
+url = "https://raw.githubusercontent.com/resbaz/nltk/master/corpora/oz_politics/ozpol.txt" # define the url
+response = requests.get(url, verify=False)
 raw_text = response.text
 raw_text = raw_text.lower() # make it lowercase, to keep things simple
 len(raw_text) # how many characters does it contain?
@@ -71,9 +76,9 @@ print(raw_text[:2000])
 
 ## Sentence segmentation
 
-We can now start to turn our corpus into a structured resource. At present, we have `raw_text`, a very, very long string of text.
+We now e can now start to turn our corpus into a structured resource. At present, we have `raw_text`, a very, very long string of text.
 
-We should break the string into segments. First, we'll split the corpus into sentences. This task is a pretty boring one, and it's tough for us to improve on existing resources.
+We should break the string into segments. First, we'll split the corpus into sentences. This task is a pretty boring one, and it's tough for us to improve on existing resources. We'll try, though.
 
 ```python
 import nltk.data
@@ -110,10 +115,6 @@ def howmany(word):
     return sum([s.count(word) for s in tokenized_sents])
 ```
 
-```python
-howmany('the')
-```
-
 Cool. Two problems, though. First, this takes one word of interest at a time. Second, we can only search for literal words.
 
 ## Loops
@@ -121,7 +122,7 @@ Cool. Two problems, though. First, this takes one word of interest at a time. Se
 A common programming method for reperforming some function is the *loop*. Most prototypical is the *for loop*:
 
 ```python
-list(range(10))
+range(10)
 ```
 
 ```python
@@ -137,30 +138,22 @@ for word in wordlist:
     print(word, howmany(word))
 ```
 
-Powerful, eh? The next problem, however, is that we're stuck writing out `refugee` and `refugees`.
+Powerful, eh? The next problem, however, is that we're stuck writing out 'refugee' and `refugees`.
 
 ## Regular expressions
 
 Regular expressions are a language for searching strings of characters. For us right now, they're a language inside a language. Alphanumeric characters and some punctuation work just like normal searches, but some special characters have different meanings. You've probably already seen some of these in the wild, like the asterisk as wildcard.
 
-At their simplest, we can check if a string matches a regex:
+At their simplest, we can use `re.search()` to search
 
-```python
-print(re.match('^T', 'this'))
-```
-
-Or to print strings matching our criteria:
-
-```python
-import re
-set(re.findall(r'[a-z]+ing\b', raw_text)[:20])
-```
+re.search(r'[a-z]+ing\b', raw_text)
 
 Let's use regular expressions to search our non-segmented text:
 
 ```python
+import re
 re.findall('muslims?', raw_text)
-re.findall('.*storm.*', raw_text)
+re.findall('.*muslim.*', raw_text)
 re.findall('[^\s]+ muslims? [^\s]+', raw_text)
 from collections import Counter
 Counter(re.findall('([^\s]+) muslims? [^\s]+', raw_text)).most_common()
@@ -176,27 +169,14 @@ Or we could use it to stem our text:
 
 ```python
 regex = re.compile(r'([a-z]+)(ing|s|ed|er)([^a-z])')
-re.sub(regex, r'\1\3', raw_text)[:2000]
+re.sub(regex, r'\1\3', raw_text)
 ```
 
-Can you update `howmany()` to handle:
-
-1. Regular expressions
-2. A tokenised corpus
+Can you update `howmany()` to handle a regular expression? Use our `flat` corpus if it's easier.
 
 ```python
 def howmany(regex):
-    import re
-    return len([i for i in flat if re.match(regex, i)])
-
-def howmany(regex):
-    c = 0
-    for i in flat:
-        if re.match(regex, i):
-            c += 1
-    return c
-
-howmany(r'musl[a-sz]')
+    return len([re.findall(regex))
 ```
 
 There are limits to this kind of approach, though. What are they?
@@ -235,6 +215,15 @@ Looking at the output, we can see that the stemmer works: *wingers* becomes *win
 
 We can see that this approach has obvious limitations. So, let's rely on a purpose-built stemmer. These rely in part on dictionaries. Note the subtle differences between the two possible stemmers.
 
+Currently, we have a list of sentences, and each sentence is a list of words. We need to flatten this list:
+
+```python
+tokens = []
+for sent in tokenized_sents:
+    for token in sent:
+        tokens.append(token)
+```
+
 Now we can try our NLTK's stemmers!
 
 ```python
@@ -243,7 +232,7 @@ lancaster = nltk.LancasterStemmer()
 porter = nltk.PorterStemmer()
 
 # stem each word in tokens
-stems = [lancaster.stem(t) for t in flat]  # replace lancaster with porter here
+stems = [lancaster.stem(t) for t in tokens]  # replace lancaster with porter here
 print(stems[:100])
 ```
 
@@ -262,13 +251,16 @@ This kind of information may be useful to lexicographers, discourse analysts, or
 In NLTK, collocation works from ordered lists of tokens. We made this earlier as `tokens`, didn't we?
 
 ```python
-print(flat[:50])
+print(tokens[:50])
 ```
 
 If not, here:
 
 ```python
-flat = sum(tokenized_sents, [])
+tokens = []
+for sent in tokenized_sents:
+    for token in sent:
+        tokens.append(token)
 ```
 
 Now, let's feed these to an NLTK function for measuring collocations:
@@ -279,7 +271,7 @@ from nltk.collocations import *
 # define statistical tests for bigrams
 bigram_measures = nltk.collocations.BigramAssocMeasures()
 # go and find bigrams
-finder = BigramCollocationFinder.from_words(flat)
+finder = BigramCollocationFinder.from_words(tokens)
 # measure which bigrams are important and print the top 30
 print(sorted(finder.nbest(bigram_measures.raw_freq, 30)))
 ```
@@ -292,20 +284,15 @@ words either side*
 ```python
 # ''window size'' specifies the distance at which
 # two tokens can still be considered collocates
-finder = BigramCollocationFinder.from_words(flat, window_size=5)
-print(sorted(finder.nbest(bigram_measures.raw_freq, 30)))
+finder = BigramCollocationFinder.from_words(tokens, window_size=5)
 ```
 
 Now we have the appearance of very common words! Let's use NLTK's stopwords list
 to remove entries containing these:
 
 ```python
-def ignorer(w):
-    ignored_words = nltk.corpus.stopwords.words('english')
-    return w.lower() in ignored_words
-
-finder.apply_word_filter(ignorer)
-print(sorted(finder.nbest(bigram_measures.raw_freq, 30)))
+ignored_words = nltk.corpus.stopwords.words('english')
+finder.apply_word_filter(lambda w: w.lower() in ignored_words)
 ```
 
 There! Now we have some interesting collocates. Finally, let's remove
@@ -313,12 +300,7 @@ punctuation-only entries, or entries that are *n't*, as this is caused by
 different tokenisers:
 
 ```python
-def ignorer(w):
-    ignored_words = nltk.corpus.stopwords.words('english')
-    return w.lower() in ignored_words or not w.isalnum()
-
-finder.apply_word_filter(ignorer)
-print(sorted(finder.nbest(bigram_measures.raw_freq, 30)))
+finder.apply_word_filter(lambda w: w.lower() in ignored_words or not w.isalnum())
 ```
 
 You can get a lot more info on collocation at the [NLTK homepage](http://www.nltk.org/howto/collocations.html).
@@ -326,16 +308,18 @@ You can get a lot more info on collocation at the [NLTK homepage](http://www.nlt
 Completed bigrams code:
 
 ```python
-def ignorer(w):
-    ignored_words = nltk.corpus.stopwords.words('english')
-    return w.lower() in ignored_words or not w.isalnum()
-
 # get all the functions needed for collocation work
 from nltk.collocations import *
+# define statistical tests for bigrams
 bigram_measures = nltk.collocations.BigramAssocMeasures()
-finder = BigramCollocationFinder.from_words(flat)
-finder.apply_word_filter(ignorer)
-print(sorted(finder.nbest(bigram_measures.raw_freq, 30)))
+# go and find bigrams
+finder = BigramCollocationFinder.from_words(tokens, window_size=5)
+ignored_words = nltk.corpus.stopwords.words('english')
+finder.apply_word_filter(lambda w: w.lower() in ignored_words or not w.isalnum())
+# measure which bigrams are important and print the top 30
+result = sorted(finder.nbest(bigram_measures.raw_freq, 30))
+for bigram in result:
+    print(bigram)
 ```
 
 ## Clustering/n-grams
@@ -367,25 +351,24 @@ def ngrammer(text, gramsize = 3, threshold = 4):
     """get ngrams of gramsize size and threshold minimum occurrences"""
     if type(text) != list:
         text = nltk.word_tokenize(text)
-    # skip punctuation? stopwords?
-    # 
+    # skip punctuation?
+    #
     ngms = ngrams(text, gramsize)
     cntr = Counter(ngms)
-    return [(gram, freq) for gram, freq in cntr.most_common() if freq >= threshold]
+    return Counter({k: v for k, v in cntr.items() if v >= threshold})
 ```
 
 Now that it's defined, let's run it, looking for trigrams
 
 ```python
-ngrammer(flat, gramsize = 2).most_common(10)
+ngrammer(raw, gramsize = 3)
 ```
 
 Whoops, punctutation.
 
 ```python
 # add me:
-text = [token for token in text if token.isalnum() and token not in ignored_words]
-
+text = [token for token in text if token.isalnum()]
 ```
 
 Too many results? Let's set a higher threshold than the default.
@@ -400,9 +383,8 @@ ngrammer(raw, gramsize = 3, threshold = 10)
 We've already done a bit of concordancing. In discourse-analytic research, concordancing is often used to perform thematic categorisation.
 
 ```python
-text = nltk.Text(flat)  # formats our tokens for concordancing
+text = nltk.Text(tokens)  # formats our tokens for concordancing
 text.concordance("muslims")
-```
 
 # A problem with the NLTK concordancer is that it only works with individual tokens. What if we want to find words that end with **ment*, or words beginning with *poli**?
 
@@ -412,13 +394,7 @@ text.concordance("muslims")
 ```
 
 ```python
-re.findall(r'(ozz?|auss)(ie)(s)?', raw_text)
-```
-
-We can use this same principle to get co-text:
-
-```python
-re.findall(r'(.*)(aussies?)(.*)', raw_text)
+# define a regex for different aussie words
 ```
 
 Well, it's ugly, but it works. We can see five bracketted results, each containing three strings. The first and third strings are the left-context and right-context. The second of the three strings is the search term.
@@ -428,18 +404,16 @@ These three sections are, with a bit of tweaking, the same as the output given b
 Let's go ahead and turn our regex seacher into a concordancer:
 
 ```python
-def conc(query, text):
-    """regex concordancer"""
-    import re
-    compiled = re.compile(r'(.*)(%s)(.*)' % query)
-    lines = re.findall(compiled, text)
-    for start, middle, end in lines:
-        concline = [start[-30:], middle, end[:30]]
-        print("\t".join(concline).expandtabs(35))
+def concordancer(text, query):
+    for line in text.splitlines():
+        if query in line:
+            start, end = line.split(query, 1)  
+            concline = [start[-30:], query, end[:30]]
+            print("\t".join(concline).expandtabs(35))
 ```
 
 ```python
-concordancer('austral[a-z]+', raw_text)
+concordancer(raw, 'australia')
 ```
 
 Great! With six lines of code, we've officially created a function that improves on the one provided by NLTK! And think how easy it would be to add more functionality: an argument dictating the size of the window (currently 30 characters), or printing line numbers beside matches, would be pretty easy to add, as well.
