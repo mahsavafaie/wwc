@@ -32,6 +32,41 @@ adverbs
 
 What do you think of these two approaches?
 
+## Tallying annotated data
+
+We can use Pandas and `Counter` to learn a little about the frequency of various tags.
+
+```python
+from collections import Counter
+import pandas as pd
+data = Counter()
+for word, tag in brown.tagged_words():
+    data[tag[:2]] += 1
+df = pd.DataFrame(data)
+df
+```
+
+This kind of data can then be plotted:
+
+```python
+%matplotlib inline
+df.plot(title = 'Common tags', kind = 'bar')
+```
+
+... or we could be more specific:
+
+```python
+vs = Counter()
+for word, tag in brown.tagged_words():
+    if tag.startswith('V'):
+        vs[word] += 1
+df = pd.DataFrame(vs)
+df
+df.plot(title = 'Common tags', kind = 'bar')
+```
+
+Play around, and see if you can plot something cool. Head [here](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.plot.html) for plotting options.
+
 ## Adding POS tags
 
 We can turn out plaintext into a POS tagged corpus just like the Brown Corpus (except lower accuracy!)
