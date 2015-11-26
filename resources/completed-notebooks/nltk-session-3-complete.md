@@ -41,8 +41,11 @@ from collections import Counter
 import pandas as pd
 data = Counter()
 for word, tag in brown.tagged_words():
-    data[tag[:2]] += 1
-df = pd.DataFrame(data)
+    # add this condition second time round
+    if word.isalnum():
+        data[tag[:2]] += 1
+df = pd.Series(list(data.values()), index = list(data.keys()))
+df = df.sort_values(ascending = False)
 df
 ```
 
@@ -53,6 +56,14 @@ This kind of data can then be plotted:
 df.plot(title = 'Common tags', kind = 'bar')
 ```
 
+If it's ugly, we can start customising the style a little:
+
+```python
+import matplotlib.pyplot as plt
+plt.style.use('fivethirtyeight')
+df.plot(title = 'Common tags', kind = 'bar')
+```
+
 ... or we could be more specific:
 
 ```python
@@ -60,9 +71,13 @@ vs = Counter()
 for word, tag in brown.tagged_words():
     if tag.startswith('V'):
         vs[word] += 1
-df = pd.DataFrame(vs)
-df
-df.plot(title = 'Common tags', kind = 'bar')
+
+```
+
+```python
+df = pd.Series(list(vs.values()), index = list(vs.keys()))
+df = df.sort_values(ascending = False)[:10]
+df.plot(title = 'Common verbs', kind = 'bar')
 ```
 
 Play around, and see if you can plot something cool. Head [here](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.plot.html) for plotting options.
@@ -76,7 +91,7 @@ with open('forum.txt', 'r', encoding = 'utf-8') as fo:
     plain = fo.read()
 section = plain[5000:10000]
 toks = nltk.word_tokenize(section)
-tagged = nltk.pos_tag(text)
+tagged = nltk.pos_tag(toks)
 tagged[:20]
 ```
 
@@ -170,8 +185,21 @@ Can you add the lemmatiser functionality to your old code?
 ```python
 for index, (word, tag) in enumerate(tagged):
     if tag.startswith('J'):
-        print(lemma(tagged[index + 1]))
+        nword = tagged[index + 1][0]
+        ntag = tagged[index + 1][1]
+        print(lemma(nword, ntag))
 ```
+
+There's a whole lot of punctuation here, which maybe isn't so helpful. How might we exlcude it?
+
+```python
+corp = [(word, tag) for word, tag in tagged if word.isalnum()]
+for index, (word, tag) in enumerate(corp):
+    if tag.startswith('J'):
+        nword = corp[index + 1][0]
+        ntag = corp[index + 1][1]
+        print(lemma(nword, ntag))
+
 ## Return to concordancing
 
 The final thing to cover in this session is concordancing. We already saw how NLTK's concordancer works:

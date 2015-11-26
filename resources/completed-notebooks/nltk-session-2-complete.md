@@ -58,7 +58,7 @@ Let's save the corpus to our cloud as a text file.
 
 ```python
 with open('forum.txt', 'w', encoding = 'utf-8') as fo:
-    fo.write(bytes(raw_text.encode('utf-8')))
+    fo.write(raw_text)
 ```
 
 ```python
