@@ -212,7 +212,7 @@ text5.concordance('seriously')
 ... but we're also aware of its limitations. Concordancing can be very powerful, especially for thematic categorisation and the like. So, let's write up a concordancer for our plain text corpus
 
 ```python
-def conc(query, text):
+def conc(corpus, query):
     """regex concordancer"""
     import re
     compiled = re.compile(r'(.*)(%s)(.*)' % query)
@@ -226,6 +226,22 @@ Let's try it out:
 
 ```python
 conc('austral[a-z]+', plain)
+```
+
+Finally, let's add a `window` keyword argument, and also fix any left printing issues:
+
+```python
+
+def conc(corpus, query, window = 30):
+    """regex concordancer"""
+    import re
+    compiled = re.compile(r'(.*)(%s)(.*)' % query)
+    lines = re.findall(compiled, text)
+    for start, middle, end in lines:
+        concline = [start[-window:], middle, end[:window]]
+        if len(concline[0]) < window:
+            concline[0] = ' ' * (window - len(concline[0])) + concline[0]
+        print("\t".join(concline).expandtabs(35))
 ```
 
 Can you learn anything from our corpus by concordancing some important tokens?
