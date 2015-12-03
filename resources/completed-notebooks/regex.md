@@ -30,11 +30,11 @@ with open('forum.txt', 'r', encoding = 'utf-8') as fo:
 ```
 
 ```python
-def conc(corpus, query):
+def conc(query, corpus):
     """regex concordancer"""
     import re
     compiled = re.compile(r'(.*)(%s)(.*)' % query)
-    lines = re.findall(compiled, text)
+    lines = re.findall(compiled, corpus)
     for start, middle, end in lines:
         concline = [start[-30:], middle, end[:30]]
         print("\t".join(concline).expandtabs(35))
@@ -49,12 +49,12 @@ conc('austral[a-z]+', data)
 Finally, let's add a `window` keyword argument, and also fix any left printing issues:
 
 ```python
-def conc(corpus, query, window = 30):
+def conc(query, corpus, window = 30, n = 50):
     """regex concordancer"""
     import re
     compiled = re.compile(r'(.*)(%s)(.*)' % query, re.I)
-    lines = re.findall(compiled, text)
-    for start, middle, end in lines:
+    lines = re.findall(compiled, corpus)
+    for start, middle, end in lines[:n]:
         concline = [start[-window:], middle, end[:window]]
         if len(concline[0]) < window:
             concline[0] = ' ' * (window - len(concline[0])) + concline[0]
@@ -63,7 +63,7 @@ def conc(corpus, query, window = 30):
 
 Great! We've improved on NLTK's concordancer!
 
-Can you find:
+Can you use `conc()` to find:
 
 1. Words with exclamation marks immediately after them
 2. Multiple punctuation marks in a row
@@ -72,11 +72,11 @@ Can you find:
 5. Numbers larger than 20
 
 ```python
-conc(data, r'[a-z]+!')
-conc(data, r'[\!\?,\.]{2,}')
-conc(data, r'[a-z]*[aeiou]{4,}[a-z]*')
-conc(data, r'[^\s]+\s[a-z]+ly\s[^\s]+')
-conc(data, r'[0-9]*[123456789][0-9]+')
+conc(r'[a-z]+!', data)
+conc(r'[\!\?,\.]{2,}', data)
+conc(r'[a-z]*[aeiou]{4,}[a-z]*', data)
+conc(r'[^\s]+\s[a-z]+ly\s[^\s]+', data)
+conc(r'[0-9]*[123456789][0-9]+', data)
 ```
 
 ### `re.compile()`
@@ -298,25 +298,38 @@ censor(sp)
 ## Regular expressions in Shell
 
 ```python
-
-```
-
-### `sed`
-
-```python
-
+!ls -R
 ```
 
 ### `grep`
 
 ```python
+!ls -R | grep '\.md'
+```
 
+### `sed`
+
+
+```python
+!ls -R | grep '\.md' | sed 's|^.*\.md$|newname.md|'
+```
+
+```python
+for f in $(ls -R); do newname=$(echo "$f" | sed 's|\.md|-markdown.md|'); echo "$newname"; done
 ```
 
 ## Resources around the web
 
 ### Checkers
 
+* [regexr](http://regexr.com/)
+* [regextester](http://www.regextester.com/)
+
 ### Cheatsheets
 
+* [https://www.debuggex.com/cheatsheet/regex/python](https://www.debuggex.com/cheatsheet/regex/python)
+* [pyregex](http://www.pyregex.com/)
+
 ### Crosswords
+
+* [regexcrossword](https://regexcrossword.com/)
