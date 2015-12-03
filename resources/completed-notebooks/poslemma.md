@@ -1,4 +1,4 @@
-# Session 3: Annotating data
+# Annotating data
 
 In this session, we introduce part of speech tagging, use it to do lemmatisation, and develop a function that can concordance a tagged corpus.
 

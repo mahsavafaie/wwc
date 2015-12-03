@@ -14,7 +14,9 @@ git clone https://github.com/interrogator/wwc.git
 
 Though we'll be working with blank notebooks in our training sessions, everything we cover lives as a complete notebook in the `resources/completed-notebooks` directory. These notebooks are useful for remembering or extending what you learned in during training. Alternatively, they may be useful for those who cannot attend our sessions face-to-face.
 
-Below is a basic overview of the four-session lesson plan. You can click the headings to view complete versions of the Jupyter Notebooks we'll be using in each session. The materials are always evolving, and pull requests are always welcome.
+Below is a basic overview of the sessions. You can click the headings to view complete versions of the Jupyter Notebooks we'll be using in each session. The materials are always evolving, and pull requests are always welcome.
+
+Sessions are fairly modular, making it possible to skip particular lessons if they are not required or if time doesn't permit.
 
 ## [Orientation](https://github.com/interrogator/wwc/blob/master/resources/completed-notebooks/orientation.md)
 
@@ -68,7 +70,7 @@ This session introduces HTML and XML formats, and how to manipulate them in Pyth
 
 ## [File operations](https://github.com/interrogator/wwc/blob/master/resources/completed-notebooks/fileops.md)
 
-Python can be used to manipulate local and remote files in complex ways. This session centres on the `os` module.
+Python can be used to manipulate local and remote files in complex ways. This session centres on the `os` and `sys` modules.
 
 ## [Wrap up](https://github.com/interrogator/wwc/blob/master/resources/completed-notebooks/wrapup.md)
 

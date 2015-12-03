@@ -1,4 +1,4 @@
-# Session 2: Common NLTK tasks
+# Common tasks in corpus linguistics
 
 In this session we provide an quick introduction to the field of *corpus linguistics*. We then engage with common uses of NLTK within these areas, such as sentence segmentation, tokenisation and stemming. Often, NLTK has inbuilt methods for performing these tasks. As a learning exercise, however, we will sometimes build basic tools from scratch.
 

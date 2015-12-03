@@ -1,4 +1,4 @@
-# Session 1: Orientation
+# Orientation
 
 Welcome to *Jupyter*. Through this interface, you'll be learning a lot of things:
 
