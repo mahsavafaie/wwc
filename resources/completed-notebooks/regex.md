@@ -61,6 +61,10 @@ def conc(query, corpus, window = 30, n = 50):
         print("\t".join(concline).expandtabs(35))
 ```
 
+```python
+conc(r'\bdead[a-z-]*', data)
+```
+
 Great! We've improved on NLTK's concordancer!
 
 Can you use `conc()` to find:
@@ -103,7 +107,14 @@ pattern = re.compile(s, re.MULTILINE)
 pattern = re.compile(s, re.S)
 ```
 
+```python
+pattern = re.compile(r'iraq.*\n.*middle east.*', re.MULTILINE)
+re.findall(pattern, data)
+```
+
 ### `re.search()`
+
+At its simplest, you can use `re.search()` to check if a regex matches some data
 
 ```python
 found = False
@@ -114,14 +125,20 @@ if re.search(r'p.w.r', data):
 
 ### `re.findall()`
 
+We could find all numbers in the text:
+
 ```python
 matches = re.findall(r'[0-9\.]+', data)
 set(matches)
 ```
 
+Whoops. Let's remove dots from the end of matches.
+
 ```python
 set([m.rstrip('.') for m in matches])
 ```
+
+> Can you write a regex that gives us the same output as the above?
 
 ```python
 for m in re.findall(r'[a-z]+ous\b', data):
@@ -157,7 +174,8 @@ Bracketted parts of regular expressions are *groups*, which we can access using 
 ```python
 pattern = re.compile(r'\b(aus)([a-z]+)', re.I)
 match = re.search(pattern, data)
-match.group(2)
+print(match.groups())
+print(match.group(2))
 ```
 
 ### `re.match()`
@@ -183,9 +201,9 @@ re.search(r'^open', 'the opening of a text')
 We can create a list from a string:
 
 ```python
-pattern = re.compile(r'\s\.,')
-lst = re.split(pattern, data, maxsplit = 2)
-lst
+pattern = re.compile(r'[\s\.,]')
+lst = re.split(pattern, data, maxsplit = 10)
+lst[:20]
 ```
 
 #### Tokenising with regular expressions
@@ -194,15 +212,20 @@ NLTK provides [a very simply method](http://www.nltk.org/_modules/nltk/tokenize/
 
 ```python
 from nltk.tokenize import RegexpTokenizer
-pattern = r'[A-Za-z0-9-]'
+# @instructor: leave out the plus and see what happens
+pattern = r'[A-Za-z0-9-]+'
 tokeniser = RegexpTokenizer(pattern)
 toks = tokeniser.tokenize(data)
 ```
 
+```python
+toks[100:150]
+```
 Really, it's no different from:
 
 ```python
 toks = [t for t in re.findall(pattern, data) if t]
+toks[100:150]
 ```
 
 ... except that has options for matching gaps rather than tokens, discarding unmatched space, etc.
@@ -292,7 +315,7 @@ def censor(plaintext):
 ```
 
 ```python
-censor(sp)
+censored = censor(sp)
 ```
 
 ## Regular expressions in Shell
@@ -309,13 +332,12 @@ censor(sp)
 
 ### `sed`
 
-
 ```python
 !ls -R | grep '\.md' | sed 's|^.*\.md$|newname.md|'
 ```
 
 ```python
-for f in $(ls -R); do newname=$(echo "$f" | sed 's|\.md|-markdown.md|'); echo "$newname"; done
+!for f in $(ls -R); do newname=$(echo "$f" | sed 's|\.md|-markdown.md|'); echo "$newname"; done
 ```
 
 ## Resources around the web
