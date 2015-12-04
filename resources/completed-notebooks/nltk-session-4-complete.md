@@ -4,7 +4,23 @@ This session goes into detail about the syntax and use-cases for regular express
 
 ## Introduction to the syntax
 
-Let's practice in [a richer environment](https://regex101.com/#python) to start with.
+Let's practice in [a richer environment](https://regex101.com/#python) to start with. **Turn on the 'global' flag.**
+
+As a sample text, we can use [The Love Song of J. Alfred Prufrock](http://www.bartleby.com/198/1.html), by T. S. Eliot, or perhaps [a recent open letter](http://english.khamenei.ir/news/2681/Today-terrorism-is-our-common-worry) from Sayyid Ali Khamenei to the "youth of the West".
+
+Then, using [Python's regex documentation](https://docs.python.org/2/library/re.html) as reference material, try to get:
+
+1. The first word of every line
+2. The last word of every line
+3. The last word of every line, if it starts with 's'
+4. Question marks
+5. Interrogatives
+6. Words beginning with capital letter that aren't line-initial
+7. All punctuation
+8. Plural nouns
+9. Text within quotation marks/brackets
+10. Hyphenates
+
 
 ## The `re` module
 
