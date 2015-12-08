@@ -1,452 +1,373 @@
+# Regular expressions
 
-# Session 4: Getting the most out of what we've learned
+This session goes into detail about the syntax and use-cases for regular expressions, both for searching text and working with data files and directories.
 
-So, now you know Python and NLTK! The main things we still have to do are:
+## Introduction to the syntax
 
-1. Address some specific questions
-2. Manage resources and results
-3. Brainstorm some other uses for NLTK
-4. Integrate IPython into your existing workflow
-5. Have an open discussion about what we've done
-6. Summarise and say goodbye!
+Let's practice in [a richer environment](https://regex101.com/#python) to start with. **Turn on the 'global' flag.**
 
-This lesson is pretty light on content and structure. Please do jump in at any
-point, and tell us about your research, and whether or not what you've learned
-here will be of much use.
+As a sample text, we can use [The Love Song of J. Alfred Prufrock](http://www.bartleby.com/198/1.html), by T. S. Eliot, or perhaps [a recent open letter](http://english.khamenei.ir/news/2681/Today-terrorism-is-our-common-worry) from Sayyid Ali Khamenei to the "youth of the West".
 
-Or, ask us if Python can do a certain thing. Maybe we have some tips!
+Then, using [Python's regex documentation](https://docs.python.org/2/library/re.html) as reference material, try to get:
+
+1. The first word of every line
+2. The last word of every line
+3. The last word of every line, if it starts with 's'
+4. Question marks
+5. Interrogatives
+6. Words beginning with capital letter that aren't line-initial
+7. All punctuation
+8. Plural nouns
+9. Text within quotation marks/brackets
+10. Hyphenates
+
+
+## The `re` module
+
+We need to import regular expression functionality before we can do anything else:
 
 ```python
-import nltk
-from IPython.display import (display, clear_output, Image, display_pretty, 
-                 display_html, display_jpeg, display_png, display_svg, HTML)
-%matplotlib inline
+import re
+re.search('pattern', 'string containing the pattern')
 ```
 
-## Mining the web
-
-Let's have a look at [Project
-Gutenberg](https://www.gutenberg.org/wiki/Technology_%28Bookshelf%29). Let's
-check out *Food processing*.
-
-Using the skills we've learned, it should be possible to extract texts from
-Project Gutenberg.
+Remember NLTK's concordancer:
 
 ```python
-booknums = ['24510', '19073', '21592']
+from nltk.book import *
+text5.concordance('seriously')
 ```
 
+Concordancing can be very powerful, especially for thematic categorisation and the like. So, let's load up some data, and then write up a regex-based concordancer for our plain text corpus:
+
 ```python
-def gutenberger(list_of_nums):
-    from urllib import urlopen
-    text = []
-    for num in list_of_nums:
-        num = str(num)
-        url = 'https://www.gutenberg.org/cache/epub/' + num + '/pg' + num + '.txt'
-        raw = urlopen(url).read()
-        raw = unicode(raw, 'utf-8')
-        # title = 'No title'
-        title = next(line for line in raw.splitlines() if line.startswith('Title:'))
-        print title
-        title = title.replace('Title: ', '')
-        text.append([title, raw])
-    return text
+with open('forum.txt', 'r', encoding = 'utf-8') as fo:
+    data = fo.read()
 ```
 
 ```python
-# call our function!
-books = gutenberger(booknums)
+def conc(query, corpus):
+    """regex concordancer"""
+    import re
+    compiled = re.compile(r'(.*)(%s)(.*)' % query)
+    lines = re.findall(compiled, corpus)
+    for start, middle, end in lines:
+        concline = [start[-30:], middle, end[:30]]
+        print("\t".join(concline).expandtabs(35))
 ```
 
-The thing to remember here is that the web is well-structured. URLs are just
-strings, and you can hack them very easily.
-
-### Getting my data into NLTK
-
-The key here is to get your work into **clean, plain text**
-
-So, let's save the Gutenberg data to disk:
+Let's try it out:
 
 ```python
-def saver(book_data):
-    import os
-    # a path to our soon-to-be corpus
-    newpath = 'corpora/gutenberg'
-    os.makedirs(newpath)
-    for title, text in book_data:
-        title = title.replace(' ', '-')
-        filename = ''.join([c for c in title if c.isalnum() or c == '-']) + '.txt'
-        fo = open(os.path.join(newpath, filename),"w")
-        fo.write(text.encode("UTF-8"))
-        fo.close()
-        print 'File created: ' + filename
+conc('austral[a-z]+', data)
 ```
 
-```python
-saver(books)
-```
-
-### Challenge
-
-**Combine the two functions into `book_saver()`**.
-
-## Adding information to our text
+Finally, let's add a `window` keyword argument, and also fix any left printing issues:
 
 ```python
-from nltk.corpus import brown
-print brown.words() 
-print brown.tagged_words()
-```
-
-Some other things are annotated in the Brown Corpus, too. Head here for more
-info:
-
-```python
-HTML('<iframe src=http://en.wikipedia.org/wiki/Brown_Corpus#Part-of-speech_tags_used width=700 height=350></iframe>')
-```
-
-So, we can pretty easily make lists containing all words of a given type. Below,
-we'll print the first 50 adverbs. Try changing the 'RB' to another kind of tag
-(in the list above), and see what results turn up.
-
-> JJ and RB are shorthand for adjective and adverb. It's linguistics jargon from
-the 50s that we're stuck with now.
-
-```python
-from nltk.corpus import brown
-adverbs = []
-for word, tag in brown.tagged_words():
-    # get any word whose tag is adverb
-    if tag == 'RB':
-        adverbs.append(word)
-adverbs[:50]
-```
-
-It's easy to grasp the potential power of annotation: think how difficult it
-would be to write regular expressions that locate all adverbs!
-
-> **Note:** John Sinclair, an early proponent of corpus linguistics generally,
-was famously resistant to the use of annotation and parsing. He felt that the
-corpus alone should be used to build theory, rather than using existing theories
-(grammars) to annotate data (e.g. [2004](#ref:sinclair)). Though this is an
-uncommon viewpoint today, it is still useful to remember that the process of
-'value-adding' is never free of theory or interpretation.
-
-## Part-of-speech tagging
-
-Part-of-speech (POS) tagging is the process of assigning each token a label.
-Often, these labels are similar to what was used to tag the Brown Corpus.
-
-> **Note:** It is generally considered good practice to train your tagger by
-exposing it to well-annotated language of a similar variety. For reasons of
-scope, however, training taggers and parsers is not covered in these sessions.
-
-```python
-books[1][1][9793:9968]
+def conc(query, corpus, window = 30, n = 50):
+    """regex concordancer"""
+    import re
+    compiled = re.compile(r'(.*)(%s)(.*)' % query, re.I)
+    lines = re.findall(compiled, corpus)
+    for start, middle, end in lines[:n]:
+        concline = [start[-window:], middle, end[:window]]
+        if len(concline[0]) < window:
+            concline[0] = ' ' * (window - len(concline[0])) + concline[0]
+        print("\t".join(concline).expandtabs(35))
 ```
 
 ```python
-sent = books[1][1][9793:9968]
-text = nltk.word_tokenize(sent)
-tagged = nltk.pos_tag(text)
-print tagged
+conc(r'\bdead[a-z-]*', data)
 ```
 
-We could use this to search text by part of speech:
+Great! We've improved on NLTK's concordancer!
+
+Can you use `conc()` to find:
+
+1. Words with exclamation marks immediately after them
+2. Multiple punctuation marks in a row
+2. tokens/words with more than three of the same vowel in a row
+3. ly adverbs with one token context either size
+5. Numbers larger than 20
 
 ```python
-for word, tag in tagged:
-    if tag == 'NN':
-        print word
+conc(r'[a-z]+!', data)
+conc(r'[\!\?,\.]{2,}', data)
+conc(r'[a-z]*[aeiou]{4,}[a-z]*', data)
+conc(r'[^\s]+\s[a-z]+ly\s[^\s]+', data)
+conc(r'[0-9]*[123456789][0-9]+', data)
 ```
 
-And even do really complicated stuff if we want:
+### `re.compile()`
+
+When using regular expressions, we may want to compile our regular expression before using it. The first reason for doing this is to make things faster: compilation can take a moment, and it can slow down loops.
 
 ```python
-for index, tup in enumerate(tagged):
-    if tup[1] == 'DT':
-        print tagged[index + 1][0] 
+s = 'cat'
+print type(s)
+pattern = re.compile(s)
+print type(pattern)
 ```
 
-### Challenge!
+#### Flags
 
-**Use three nested conditional statements to find a single word. Be creative!**
-
-## Getting your data into Python/NLTK
-
-### Scenario 1: You have some old books.
-
-* Are they machine readable?
-* OCR options&mdash;institutional or DIY?
-* Structure them in a meaningful way&mdash;by author, by year, by language ...
-* Start querying!
-
-### Scenario 2: You're interested in an online community.
-
-* Explore the site. Sign up for it, maybe.
-* Download it: *Wget*, *curl*, *crawlers, spiders* ...
-* Extract relevant data and metadata: Python's *Beautiful Soup* library.
-* **Structure your data!**
-* Annotate your data, save these annotations
-* Start querying!
-
-### Scenario 3: Something of interest breaks in the news
-
-* It will start being discussed all over the web.
-* You can use the Twitter API to harvest tweets containing a term or hashtag of
-interest.
-* You can get a list of RSS feeds and mine news articles
-* You can use something like *WebBootCat* to harvest search engine results and
-make a plain text corpus
-* Process these into a manageable form
-* Structure them
-* *Start querying!
-
-## Managing resources and results
-
-You generate huge amounts of code, data and findings. Often, it's hard to know
-what to do with it all. In this section, we'll provide some suggestions designed
-to keep your work:
-
-1. Reproducible
-2. Reusable
-3. Comprehensible
-
-### Your code
-
-1. Most importantly, **write comments on your code**. You **will** forget what
-bits of code are supposed to do. Using others' code is much easier if it's
-commented up.
-2. A related point is to name your variables meaningfully: *variablexxy* does
-not tell us much about what it will contain. *For image in images:*  is a very
-comprehensible line.
-3. Also, write docstrings for your functions. Help messages come in very handy
-for not only others, but yourself. Simply stating what
-2. **Version control**. When editing your code, you may sometimes break it.
-[Here](https://drclimate.wordpress.com/2012/11/16/version-control/)'s a write-up
-about version control from Damien Irving.
-3. **Share your code**. You are often doing novel things when you code, and
-sharing what you've done can save somebody else a lot of work. *GitHub* is free
-for open-source projects. GitHub provides version control, which is especially
-useful when you are working with a team.
-
-#### Developing as a programmer
-
-We've only scratched the surface of Python, to be honest. In fact, we've only
-been treating Python as a programming language. Many of its users, however, see
-it as more than just a programming language: it is an ideology and culture, as
-well.
-
-You'll notice on Stack Overflow, people will remark that some solutions are more
-'pythonic' than others. By this, they typically mean that the code is easy to
-read and broken into discrete functions. More broadly, *pythonic* refers to code
-that adheres to the *Zen of Python*:
+The second reason we might want to use `re.compile()` is that we can easily add in options that change how our regular expression will match things:
 
 ```python
-import this
-```
-
-So, as you explore Python more and more, you learn not only new ways to get
-tasks done, but also what ways are better to others. While at first you'll be
-content with making code that works, you'll later want to make sure your code is
-elegant as well. Fixing up your old code becomes a form of procrastination from
-thesis writing. Luckily, of all the kinds of procrastination, it's one of the
-better kinds.
-
-Another change you might notice is a switch toward *defensive programming*,
-where you write code to handle potential errors, and to provide useful messages
-when people do something wrong. This is a really awesome thing to do.
-
-Some code authors also try to use *test-driven development*. From [the wikipedia
-article](http://en.wikipedia.org/wiki/Test-driven_development):
-
-> First the developer writes an (initially failing) automated test case that
-defines a desired improvement or new function, then produces the minimum amount
-of code to pass that test, and finally refactors the new code to acceptable
-standards.
-
-This helps stop feature-creep, builds your confidence, and encourages the
-division of long code into well-defined functions.
-
-Oh, and you'll probably start dreaming in code. *Not* a joke.
-
-### Your data
-
-It should now be clear to you that you have data!
-Think about how you structure it. Without necessarily becoming an archivist, do
-think about your metadata. It will help you to manage your data later.
-*Cloud computing* offers you access to more storage and compute-power than you
-might want to own. Plus you're unlikely to spill coffee on it.
-
-### Your findings
-
-[*Figshare*](http://www.figshare.com) is a site for storing tables and figures.
-It's particularly useful for working with large datasets, as we often generate
-far more raw tables and statistics than we can possibly publish.
-
-It's becoming more and more common to link journal publications to additional
-online resources such as GitHub code or Figshares. It's also more and more
-common to cite GitHub and Figshare&mdash;always nice to bump up your citation
-count!
-
-## Other uses of NLTK
-
-What other things might we use NLTK for? A few examples, and possible workflows.
-
-## Integrating IPython into your workflow
-
-What you've learned here isn't much good unless you can pull things out of it
-and put them into your own research workflow.
-
-It's important to remember that IPython code may be a little different from
-vanilla Python, as it can contain Magics, shell commands, and the like.
-
-Perhaps the coolest thing about programming is you are simultaneously
-researching and developing. The functions that you write can be uploaded to the
-web and used by others who encounter the problem that necessitated your writing
-the function in the first place.
-
-In reality, NLTK is nothing more than a lot of Python functions, coupled with
-some datasets (corpora, stopword lists, etc.). You can even visit NLTK on
-GitHub, fork their repository, and start playing around with the code! If you
-find bugs in the code, or if you think documentation is lacking, you can either
-write directly to the people who maintain the code, or fix the problem yourself
-and request that they review your fix and integrate it into NLTK.
-
-### Using IPython locally
-
-We've done everything on the cloud so far, and it's been pretty good to us. You
-may also want to use IPython locally. To do this, you need to install it. There
-are many ways to install it, and these vary depending on your OS and what you
-already have installed. See the [IPython website](http://ipython.org/ipython-
-doc/2/install/install.html#installnotebook) for detailed instructions.
-
-> *[Anaconda](http://continuum.io/downloads)* is a large package of Python-based
-tools (including IPython and Matplotlib) that is easy to install.
-
-Once you have IPython installed, it's very easy to start using it. All you need
-to do is open up Terminal, navigate to the notebook directory and type:
-
-     ipython notebook filename.ipynb
-
-This will open up a blank notebook, exactly the same as the kind of notebook
-we've been using on the cloud. The only difference will be that if you enter:
-
-     os.listdir('.')
-
-you'll get a list of files in the directory of your notebook file, rather than a
-directory of your part of the cloud.
-
-## Next steps - keep going!
-
-```python
-Image(url='http://starecat.com/content/wp-content/uploads/two-states-of-every-programmer-i-am-god-i-have-no-idea-what-im-doing.jpg')
-```
-
-We hope you've learned enough in these two days to be excited about what NLTK
-can add to your work and you're feeling confident to start working on your own.
-Code breaks. Often. Be patient and try not to get discouraged.
-The good thing about code breaking so often is that you can find help. Try:
-* Coming back to these notebooks and refreshing your memory
-* Checking the NLTK book
-* Googling your error messages. This will often lead you to Stack Overflow, the
-major online community for sharing coding questions.
-* NLTK also has a Google group where people share their experiences and ask for
-help
-* Keep in touch! Your community is a wonderful resource.
-
-## Summaries and goodbye
-
-Before we go, we should summarise what we've learned. Add all this to your CV!
-
-* Navigating the IPython notebook
-* Python commands - defining a variable; building a function
-* Using Python to perform basic quantitative analysis of text
-* Tagging and parsing to perform more sophisticated analysis of language
-* A crash course in corpus linguistics!
-* An appreciation of clean vs messy data and data structure
-* Data management practices
-
-## Bragging rights
-
-The work you have been doing today on the Fraser corpus is actually pretty
-cutting edge. Very little analysis like this has been undertaken on an
-Australian political corpus.
-
-You have produced publishable work today. Really. Be proud. And if you feel like
-writing up your findings, do it!
-
-## Thanks!
-
-That's the end of of course. Thank you to everybody for your participation.
-
-Please let us know how you found the course.
-
-Also, [submit a pull request](https://github.com/resbaz/lessons) and improve our
-teaching materials!
-
-## Bibliography
-
-<a id="ref:chomsky"></a>
-Chomsky, N. (1965). Aspects of the Theory of Syntax (Vol. 11). The MIT press.
-
-Eggins, S. (2004). Introduction to systemic functional linguistics. Continuum
-International Publishing Group.
-
-Halliday, M., & Matthiessen, C. (2004). An Introduction to Functional Grammar.
-Routledge.
-
-<a id="ref:sinclair"></a>
-Sinclair, J. (2004). Trust the text: Language, corpus and discourse. Routledge.
-Available at
-[http://books.google.com.au/books/about/Trust_the_Text.html?id=n6xU2lyVoeQC&redi
-r_esc=y](http://books.google.com.au/books/about/Trust_the_Text.html?id=n6xU2lyVo
-eQC&redir_esc=y).
-
-### Workspace
-
-Here are a few blank cells, in case you need them for anything:
-
-```python
-# 
+# ignore case
+pattern = re.compile(s, re.I)
+# match over multiple lines
+pattern = re.compile(s, re.MULTILINE)
+# dot matches newline too
+pattern = re.compile(s, re.S)
 ```
 
 ```python
-#
+pattern = re.compile(r'iraq.*\n.*middle east.*', re.MULTILINE)
+re.findall(pattern, data)
+```
+
+### `re.search()`
+
+At its simplest, you can use `re.search()` to check if a regex matches some data
+
+```python
+found = False
+if re.search(r'p.w.r', data):
+    found = True
+    print(found)
+```
+
+### `re.findall()`
+
+We could find all numbers in the text:
+
+```python
+matches = re.findall(r'[0-9\.]+', data)
+set(matches)
+```
+
+Whoops. Let's remove dots from the end of matches.
+
+```python
+set([m.rstrip('.') for m in matches])
+```
+
+> Can you write a regex that gives us the same output as the above?
+
+```python
+for m in re.findall(r'[a-z]+ous\b', data):
+    print('You are a very %s person.' % m)
+```
+
+### Match objects
+
+```python
+match = re.search(r'fe[a-z]+', data)
+type(match)
+```
+
+When our pattern matches, we are left with a *match object*, which has special attributes.
+
+#### Getting character indices
+
+```python
+print(match.start(), match.end())
+# or ...
+print(match.span())
 ```
 
 ```python
-#
+### access the data we passed in
+print(match.string[:100])
+```
+
+#### Groups
+
+Bracketted parts of regular expressions are *groups*, which we can access using `match.group(n)`. `match.group(0)` matches the entire match.
+
+```python
+pattern = re.compile(r'\b(aus)([a-z]+)', re.I)
+match = re.search(pattern, data)
+print(match.groups())
+print(match.group(2))
+```
+
+### `re.match()`
+
+`re.match()` is just like `re.search()`, but it only matches start of lines:
+
+```python
+re.match(r'open', 'the opening of a text')
 ```
 
 ```python
-#
+re.search(r'open', 'the opening of a text')
+```
+
+Generally, it's probably better to use `re.search()` with a caret (`^`) if need be:
+
+```python
+re.search(r'^open', 'the opening of a text')
+```
+
+### `re.split()`
+
+We can create a list from a string:
+
+```python
+pattern = re.compile(r'[\s\.,]')
+lst = re.split(pattern, data, maxsplit = 10)
+lst[:20]
+```
+
+#### Tokenising with regular expressions
+
+NLTK provides [a very simply method](http://www.nltk.org/_modules/nltk/tokenize/regexp.html) for tokenising by regular expression:
+
+```python
+from nltk.tokenize import RegexpTokenizer
+# @instructor: leave out the plus and see what happens
+pattern = r'[A-Za-z0-9-]+'
+tokeniser = RegexpTokenizer(pattern)
+toks = tokeniser.tokenize(data)
 ```
 
 ```python
-#
+toks[100:150]
+```
+Really, it's no different from:
+
+```python
+toks = [t for t in re.findall(pattern, data) if t]
+toks[100:150]
+```
+
+... except that has options for matching gaps rather than tokens, discarding unmatched space, etc.
+
+```python
+## @instructor: modify the earlier cell for this code
+from nltk.tokenize import RegexpTokenizer
+pattern = r'\s+'
+tokeniser = RegexpTokenizer(pattern, gaps = True, discard_empty = False)
+toks = tokeniser.tokenize(data)
+```
+
+### `re.sub()`
+
+`re.sub()` does find and replace with regular expressions.
+
+```python
+print(data.count('moslem'))
+print(data.count('muslim'))
+fx = re.sub(r'moslems*', 'muslim', data)
+print(fx.count('muslim'))
+```
+
+## Putting it all together
+
+We've got the script to the [South Park: Bigger, Longer & Uncut](https://en.wikipedia.org/wiki/South_Park:_Bigger,_Longer_%26_Uncut). This film was briefly quite famous for its profanity.
+
+```python
+with open('southparkmovie.txt', 'r', encoding = 'utf-8') as fo:
+    sp = fo.read()
+sp.count('shit')
+```
+Write a function that uses regex to replace obscenities with asterisks. Bonus points for:
+
+1. Making it easy to add new obscenities to the list
+2. Printing examples as the function runs to show us that it's working
+3. Asterisks being the same length as the obscenity
+
+```python
+def censor(plaintext):
+    """censor naughty words"""
+    import re
+    naughty = [r'(bull)shite?', 'bloody', 'fuck', 'hell']
+    pattern = r'\b(' + '|'.join(naughty) + r')[a-z]*'
+    regex = re.compile(pattern, re.I)
+    replaced = re.sub(regex, '****', plaintext, count=False)
+    ast = re.compile(r'\*+')
+    for line in replaced.splitlines():
+        if re.search(ast, line):
+            print(line)
+    return replaced
 ```
 
 ```python
-#
+def censor(plaintext):
+    """second attempt"""
+    import re
+    from nltk import word_tokenize
+    toks = word_tokenize(plaintext)
+    naughty = [r'(bull)shite?', 'bloody', 'fuck', 'hell']
+    pattern = r'\b(' + '|'.join(naughty) + r')[a-z]*'
+    regex = re.compile(pattern, re.I)
+    for index, tok in enumerate(toks):
+        mtch = re.match(regex, tok)
+        if mtch:
+            toks[index] = '*' * len(mtch.group(0))
+            print(' '.join(toks[index - 5:index+5]))
+    return toks
 ```
 
 ```python
-#
+def censor(plaintext):
+    import re
+    naughty = [r'(bull)shite?', 'bloody', 'fuck', 'hell']
+    pattern = r'\b(' + '|'.join(naughty) + r')[a-z]*'
+    regex = re.compile(pattern, re.I)
+    lst_of_chars = list(plaintext)
+    lines = plaintext.splitlines()
+    for index, line in enumerate(lines):
+        mtch = re.search(regex, line)
+        if mtch:
+            toreplace = mtch.group(0)
+            censored = line.replace(toreplace, '*' * len(toreplace))
+            lines[index] = censored
+            print(censored)
+    return '\n'.join(lines)
 ```
 
 ```python
-#
+censored = censor(sp)
+```
+
+## Regular expressions in Shell
+
+```python
+!ls -R
+```
+
+### `grep`
+
+```python
+!ls -R | grep '\.md'
+```
+
+### `sed`
+
+```python
+!ls -R | grep '\.md' | sed 's|^.*\.md$|newname.md|'
 ```
 
 ```python
-#
+!for f in $(ls -R); do newname=$(echo "$f" | sed 's|\.md|-markdown.md|'); echo "$newname"; done
 ```
 
-```python
-#
-```
+## Resources around the web
 
-```python
-# 
-```
+### Checkers
+
+* [regexr](http://regexr.com/)
+* [regextester](http://www.regextester.com/)
+
+### Cheatsheets
+
+* [https://www.debuggex.com/cheatsheet/regex/python](https://www.debuggex.com/cheatsheet/regex/python)
+* [pyregex](http://www.pyregex.com/)
+
+### Crosswords
+
+* [regexcrossword](https://regexcrossword.com/)
