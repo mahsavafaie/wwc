@@ -70,7 +70,7 @@ This session introduces HTML and XML formats, and how to manipulate them in Pyth
 
 Python can be used to manipulate local and remote files in complex ways. This session centres on the `os` module.
 
-## [Session 7: Getting the most out of what we've learned](https://github.com/interrogator/wwc/blob/master/resources/completed-notebooks/nltk-session-4-complete.md)
+## [Session 7: Getting the most out of what we've learned](https://github.com/interrogator/wwc/blob/master/resources/completed-notebooks/nltk-session-7-complete.md)
 
 Our final session involves:
 
