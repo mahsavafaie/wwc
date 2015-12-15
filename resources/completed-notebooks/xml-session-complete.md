@@ -1,6 +1,6 @@
 # Session 5: XML/HTML
 
-In this session we provide a quick introduction to **XML** and **HTML**. We then engage with common uses of `beautifulsoup4` to read, manipulate and write XML/HTML with Python.
+In this session we provide a quick introduction to **XML**. We then engage with common uses of `beautifulsoup4` to read, manipulate and write XML data with Python.
 
 ## XML and HTML
 
@@ -8,35 +8,15 @@ Both **XML** and **HTML** are markup languages. Markup languages are systems to 
 
 Two well known markup formats are **XML** and **HTML**. They are very similar in fact. Both are instances of SGML and both follow the DOM specification. However, **HTML** is a markup format made up of a pre-defined closed set of tags, with a specification that is used by web browsers to present web content. Whereas, **XML** is not restricted to a particular set of elements and/or purpose. Users can define the structure of the document, its elements, attributes, etc.
 
-### HTML
+Because most of what we will learn for XML also applies to HTML (we can regard HTML as a specification of the more general XML), and there are plenty of resources in the web to learn HTML, we will focus on XML.
 
-**HyperText Markup Language**, commonly referred to as **HTML**, is the standard markup language used to create web pages. Web browsers can read **HTML** files and render them into visible or audible content. Since **HTML** describes the structure of the page semantically along with cues for presentation.
+### Documents as trees
 
-The language is written in the form of **HTML** elements consisting of tags enclosed in angle brackets (like `<html>`). Browsers do not display the **HTML** tags and scripts, but use them to interpret the content of the page.
-
-The most recent version of **HTML** is `HTML5`. You have to be aware, though, that there are other specifications out there still widely used like: `HTML4` or `XHTML`.
-
-The core components of **HTML** are: elements and their attributes, and entity references.
-
-Elements are tags enclosed in angle brackets. Typically, tags come in pairs: a "start tag" `<p>` and "end tag" `</p>`. Although, there are also empty tags like: `<br/>`.
-
-```xml
-<a href="https://en.wikipedia.org/wiki/HTML">HTML</a>
-```
-
-<!-- go to the browser and show the source code -->
-
-#### DOM
-
-DOM stands for *Document Object Model*. This is the specification of how a **HTML** document has to be structured, as well as how the file is manipulated to create, edit or remove contents.
+DOM stands for *Document Object Model*. This is the specification of how a **HTML** and **XML** documents has to be structured, as well as how the file is manipulated to create, edit or remove contents.
 
 We can think of DOM as a tree structure:
 
-![DOM Model](https://upload.wikimedia.org/wikipedia/commons/5/5a/DOM-model.svg "DOM Document Object Model")
-
-By Birger Eriksson (Own work) [<a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>], <a href="https://commons.wikimedia.org/wiki/File%3ADOM-model.svg">via Wikimedia Commons</a>
-
-The equivalent **HTML** source code would look like this:
+<!-- replace the example with a XML one -->
 
 ```html
 <!DOCTYPE html>
@@ -51,24 +31,9 @@ The equivalent **HTML** source code would look like this:
 </html>
 ```
 
-A **HTML** file normally has:
-
-1. an **HTML** declaration `<!DOCTYPE html>`
-1. an `html` element, it is the root element. The language of the document is normally specified through its attribute `lang`.
-1. a `head` element, containing:
-    - the `title`, and
-    - `meta` elements providing information about the document like: keywords, description, author, content-type, style documents, refresh options, charset...
-1. a `body` element containing what will be showed on the screen. Typical children elements are: `header`, `footer`, `div`, `p`, `br`, `h1`, `h2`...
-
-#### Learn more about HTML
-
-- **HTML** article in the Wikipedia <https://en.wikipedia.org/wiki/HTML>
-- The Missing Link: An Introduction to Web Development and Programming <http://pressbooks.opensuny.org/themissinglink>
-- w3schools.com **HTML**(5) Tutorial <http://www.w3schools.com/html>
-
 ### XML
 
-XML sntads for EXtensible Markup Language. This language was designed to store and transport data. And it was designed to be both human- and machine-readable.
+XML stands for E**X**tensible **M**arkup **L**anguage. This language was designed to store and transport data. And it was designed to be both human- and machine-readable. Unlike HTML the structure of the document, the elements, their attributes, and the content are not pre-defined. That provides a very flexible framework. For that reason the
 
 > XML is a generalized way of describing hierarchical structured data. An xml document contains one or more elements, which are delimited by start and end tags. Elements can be nested to any depth. An element inside another one is said to be a subelement or child. The first element in every xml document is called the root element. An xml document can only have one root element.
 
@@ -97,7 +62,7 @@ Therefore, whenever you work with markup languages, try to check that everything
 
 #### Well-formed documents
 
-A document is well-formed if it is compliant with some minimal requirements. In **HTML**:
+A document is well-formed if it is compliant with some minimal requirements:
 
 - the document contains a document type declaration
 - a single element, known as the root element, contains all the other elements in the document.
@@ -107,16 +72,9 @@ A document is well-formed if it is compliant with some minimal requirements. In 
     - properly nested so that they do not overlap
 - `<`, `>`, `"`, `'`, and `&` are only used as markup (either part of a tag or a entity). If they are to be used in the document as character, entities should be used instead: `&lt;`, `&gt;`, `&quot;`, `&apos;`, `&amp;`.
 - there are rules about the characters that can be used in element names and elsewhere
-
-The rules for well-formed **XML** go beyond the requirements mentioned above:
-
 - tags are case-sensitive
 - attribute values have to be quoted
 - it contains only properly encoded legal Unicode characters
-
-More on well-formed **XML**: <https://en.wikipedia.org/wiki/Well-formed_document>
-
-More on well-formed **HTML**: <https://en.wikipedia.org/wiki/Well-formed_element>
 
 #### Valid documents
 
@@ -127,43 +85,37 @@ However, the structure and contents of **XML** documents can and have to be defi
 - it is well-formed, and
 - it observes the rules dictated by its DTD or **XML** schema.
 
-If used properly, **XML** schemas can help you to detect annotation inconsistencies and errors.
+If used properly, **XML** schemas can help you to detect annotation inconsistencies and errors (specially helpful if you are working with data created manually by humans).
 
-There are different ways to define documents out there. My favorite schema language is **Relax NG compact**: it is quite easy to understand, write, and read. It is much more powerful than DTDs, but easier than other **XML** schema languages.
+There are different ways to define documents out there. My favorite schema language is **Relax NG compact**: it is quite easy to understand, write, and read. It is much more powerful than DTDs, but at the same time easier than other **XML** schema languages.
 
 To get started check this [tutorial](http://www.relaxng.org/compact-tutorial-20030326.html).
 
 <!-- Add here your reference links from GECCo metadata revision -->
 
-#### Check HTML
-
-W3C Markup Validation Service <https://validator.w3.org/>
-
 #### Check XML
 
-Some **XML** editors allow the validation of **XML** files using a DTD or **XML** schema. If you have many files to validate you probably want to use a command line tool.
+Some **XML** editors allow the validation of **XML** files using a DTD or **XML** schema. For illustrative purposes, we will use a website where you can validate XML documents against a Relax NG compact schema.
 
-<!-- check the Ubuntu command -->
-
-`jing` is the best known for Relax NG Schema compact format.
-In Mac OS X you can install it with [homebrew](http://brew.sh) `brew cask install jing`. In Ubuntu there is a package called jing-trang `sudo apt-get install jing-trang`. If you are working in Windows you have to compile it from source <https://github.com/relaxng/jing-trang>.
-
-Once it is installed, you can validate a file with something similar to:
-
-<!-- check the syntax of the command below -->
-
-```shell
-java -jar jing.jar -c schema XMLfile
-```
-
-<!-- provide a schema and a file to validate -->
-
-There is an online validator that you might want to try:
 <https://validator.nu>
 
-There is a python wrapper for jing-trang tools, be aware that it is still in beta: <https://pypi.python.org/pypi/jingtrang>
+<!-- provide the a XML file with its rnc -->
 
-<!-- the python wrapper is much more interesting -->
+If you have many files to validate you probably want to use a command line tool. [`jing`](<https://github.com/relaxng/jing-trang>) is the best known for Relax NG Schema compact format. There is a python wrapper for jing-trang tools <https://pypi.python.org/pypi/jingtrang>, which allows you to validate XML files using Relax NG compact files.
+
+You can install it through `pip` if you have `java`:
+
+```shell
+pip install jingtrang
+```
+
+To validate an XML file against a Relax NG compact schema run the following command:
+
+```shell
+pyjing -c schema.rnc file.xml
+```
+
+You can also install `jing` directly without the python wrapper. The syntax is the same. In Mac OS X you can install it with [homebrew](http://brew.sh) `brew cask install jing`. In Ubuntu there is a package called jing-trang `sudo apt-get install jing-trang`. If you are working in Windows you have to compile it from source <https://github.com/relaxng/jing-trang>.
 
 ## Python and XML/HTML
 
@@ -185,9 +137,7 @@ There are also a few packages not included in the standard library which are ver
 
 - [`lxml`](http://lxml.de), which uses libxml2 and libxslt libraries. It parses **XML** and **HTML** and it is very fast. It follows the ElementTree API. Moreover, it adds interesting features like XPath, XSLT and much more.
 - [`html5lib`](https://github.com/html5lib/html5lib-python), an **HTML** parser that creates valid **HTML5**, and parses pages the same browser does (extremely lenient).
-- [`beautifulsoup4`](http://www.crummy.com/software/BeautifulSoup), a Python library for pulling data out of **HTML** and **XML** files. It provides idiomatic ways of navigating, searching and modifying the parse tree. You can use different parsers under the hood (like the excellent `lxml` and `html5lib`). A pythonic API.
-
-With these last three you will get the best of Python tools to work with **HTML** and **XML**.
+- [`beautifulsoup4`](http://www.crummy.com/software/BeautifulSoup), a Python library for pulling data out of **HTML** and **XML** files. It provides idiomatic ways of navigating, searching and modifying the parse tree. You can use different parsers under the hood (like the excellent `lxml` and `html5lib`). You just learn one API and you use it for all the parsers.
 
 ### Setting up the environment
 
@@ -203,13 +153,7 @@ Install lxml:
 sudo rpm --rebuilddb && sudo yum install -y libxml2-devel libxslt-devel && pip install lxml
 ```
 
-Install html5lib:
-
-```shell
-pip install html5lib
-```
-
-Finally, install beautifulsoup:
+Then, install beautifulsoup:
 
 ```shell
 pip install beautifulsoup4
@@ -217,18 +161,43 @@ pip install beautifulsoup4
 
 > If you are working locally, the procedure to install `lxml` will be different. Check [Installing lxml](http://lxml.de/installation.html) for more information.
 
-## Working with HTML
-
-### Challenge
-
-
-
 ## Working with XML
 
 ### Challenge
 
+### Challenge
 
 ## Summary
+
+## Learn more
+
+After having learnt a bit of **XML** and `beautifulsoup4`, you are ready to learn on your own about **HTML** and web scrapping.
+
+### HTML
+
+Learn more about HTML:
+
+- **HTML** article in the Wikipedia <https://en.wikipedia.org/wiki/HTML>
+- The Missing Link: An Introduction to Web Development and Programming <http://pressbooks.opensuny.org/themissinglink>
+- w3schools.com **HTML**(5) Tutorial <http://www.w3schools.com/html>
+
+### Web scrapping with `beautifulsoup4`
+
+- <http://web.stanford.edu/~zlotnick/TextAsData/Web_Scraping_with_Beautiful_Soup.html>
+- <http://programminghistorian.org/lessons/intro-to-beautiful-soup>
+
+### XML
+
+We have just scratched the surface today. If you want to learn more, you can start here:
+
+- **XML** article in the Wikipedia <https://en.wikipedia.org/wiki/XML>
+- w3schools.com **XML** tutorial <http://www.w3schools.com/xml/default.asp>
+
+### lxml
+
+If you need better performance and/or you need higher control of what the parser does. Or you are familiar with XPath, and XSLT you might want to give a try to `lxml`.
+
+<http://lxml.de/tutorial.html>
 
 ## Bibliography
 
