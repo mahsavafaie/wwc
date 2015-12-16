@@ -16,24 +16,30 @@ DOM stands for *Document Object Model*. This is the specification of how a **HTM
 
 We can think of DOM as a tree structure:
 
-<!-- replace the example with a XML one -->
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>My title</title>
-  </head>
-  <body>
-    <h1>A heading</h1>
-    <a href="https://en.wikipedia.org/wiki/HTML">Link text</a>
-  </body>
-</html>
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<TextCorpus lang="de">
+    <text>Karin fliegt nach New York. Sie will dort Urlaub machen.</text>
+    <tokens>
+        <token ID="t_0">Karin</token>
+        <token ID="t_1">fliegt</token>
+        <token ID="t_2">nach</token>
+        <token ID="t_3">New</token>
+        <token ID="t_4">York</token>
+        <token ID="t_5">.</token>
+        <token ID="t_6">Sie</token>
+        <token ID="t_7">will</token>
+        <token ID="t_8">dort</token>
+        <token ID="t_9">Urlaub</token>
+        <token ID="t_10">machen</token>
+        <token ID="t_11">.</token>
+    </tokens>
+</TextCorpu>
 ```
 
 ### XML
 
-XML stands for E**X**tensible **M**arkup **L**anguage. This language was designed to store and transport data. And it was designed to be both human- and machine-readable. Unlike HTML the structure of the document, the elements, their attributes, and the content are not pre-defined. That provides a very flexible framework. For that reason the
+**XML** stands for E**X**tensible **M**arkup **L**anguage. This language was designed to store and transport data. And it was designed to be both human- and machine-readable. Unlike HTML the structure of the document, the elements, their attributes, and the content are not pre-defined. That provides a very flexible framework.
 
 > XML is a generalized way of describing hierarchical structured data. An xml document contains one or more elements, which are delimited by start and end tags. Elements can be nested to any depth. An element inside another one is said to be a subelement or child. The first element in every xml document is called the root element. An xml document can only have one root element.
 
@@ -45,14 +51,7 @@ XML stands for E**X**tensible **M**arkup **L**anguage. This language was designe
 
 > Finally, xml documents can contain character encoding information on the first line, before the root element.
 
-Since XML
-
-
-<!-- Complete information at least with a paragraph. -->
-
 <!-- http://www.diveintopython3.net/xml.html -->
-
-Learn more about **XML** with this [article](https://en.wikipedia.org/wiki/XML) from the Wikipedia, or follow the [XML Tutorial](http://www.w3schools.com/xml) from the `w3schools.com`.
 
 ### Well-formed and valid
 
@@ -93,13 +92,13 @@ To get started check this [tutorial](http://www.relaxng.org/compact-tutorial-200
 
 <!-- Add here your reference links from GECCo metadata revision -->
 
-#### Check XML
+#### Validating XML
 
-Some **XML** editors allow the validation of **XML** files using a DTD or **XML** schema. For illustrative purposes, we will use a website where you can validate XML documents against a Relax NG compact schema.
-
-<https://validator.nu>
+Some **XML** editors allow the validation of **XML** files using a DTD or **XML** schema.
 
 <!-- provide the a XML file with its rnc -->
+
+<!-- just work with the TCF Validator, to illustrate the point will be enough https://weblicht.sfs.uni-tuebingen.de/tcf-validator/ -->
 
 If you have many files to validate you probably want to use a command line tool. [`jing`](<https://github.com/relaxng/jing-trang>) is the best known for Relax NG Schema compact format. There is a python wrapper for jing-trang tools <https://pypi.python.org/pypi/jingtrang>, which allows you to validate XML files using Relax NG compact files.
 
@@ -119,7 +118,7 @@ You can also install `jing` directly without the python wrapper. The syntax is t
 
 ## Python and XML/HTML
 
-<!-- illustrate why trying to 'parse' literally or with regexp does not work -->
+<!-- illustrate why trying to 'parse' literally or with regexp does not work: indentation, context, attribute order, attribute ambiguity... -->
 
 ### Packages
 
@@ -135,8 +134,8 @@ Python includes different markup processing tools in its standard library.
 
 There are also a few packages not included in the standard library which are very useful:
 
-- [`lxml`](http://lxml.de), which uses libxml2 and libxslt libraries. It parses **XML** and **HTML** and it is very fast. It follows the ElementTree API. Moreover, it adds interesting features like XPath, XSLT and much more.
-- [`html5lib`](https://github.com/html5lib/html5lib-python), an **HTML** parser that creates valid **HTML5**, and parses pages the same browser does (extremely lenient).
+- [`lxml`](http://lxml.de), which uses `libxml2` and `libxslt` libraries. It parses **XML** and **HTML** and it is very fast. It follows the ElementTree API. Moreover, it adds interesting features like `XPath`, `XSLT` and much more.
+- [`html5lib`](https://github.com/html5lib/html5lib-python), an **HTML** parser that creates valid **HTML5**, and parses pages like a browser does (extremely lenient).
 - [`beautifulsoup4`](http://www.crummy.com/software/BeautifulSoup), a Python library for pulling data out of **HTML** and **XML** files. It provides idiomatic ways of navigating, searching and modifying the parse tree. You can use different parsers under the hood (like the excellent `lxml` and `html5lib`). You just learn one API and you use it for all the parsers.
 
 ### Setting up the environment
@@ -144,8 +143,6 @@ There are also a few packages not included in the standard library which are ver
 We are going to use `beautifulsoup4`, `lxml` and `html5lib`. These packages are not part of python's standard library. We need to install them by using `pip`, the python package manager.
 
 Go to the Shell Terminals in the cloud.
-
-<!-- insert image -->
 
 Install lxml:
 
@@ -162,6 +159,18 @@ pip install beautifulsoup4
 > If you are working locally, the procedure to install `lxml` will be different. Check [Installing lxml](http://lxml.de/installation.html) for more information.
 
 ## Working with XML
+
+### Read a XML file
+
+```python
+from bs4 import BeautifulSoup
+
+xmlsource = <text><token id="1">Hello</token><token id="2">World</token></text>
+
+soup = BeautifulSoup(xmlsource, 'xml')
+
+print(soup.prettify())
+```
 
 ### Challenge
 
