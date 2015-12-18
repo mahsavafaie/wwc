@@ -1,4 +1,4 @@
-# Session 5: XML/HTML
+# Session 5: XML
 
 In this session we provide a quick introduction to **XML**. We then engage with common uses of `beautifulsoup4` to read, manipulate and write XML data with Python.
 
@@ -34,24 +34,82 @@ We can think of DOM as a tree structure:
         <token ID="t_10">machen</token>
         <token ID="t_11">.</token>
     </tokens>
-</TextCorpu>
+</TextCorpus>
 ```
 
 ### XML
 
 **XML** stands for E**X**tensible **M**arkup **L**anguage. This language was designed to store and transport data. And it was designed to be both human- and machine-readable. Unlike HTML the structure of the document, the elements, their attributes, and the content are not pre-defined. That provides a very flexible framework.
 
-> XML is a generalized way of describing hierarchical structured data. An xml document contains one or more elements, which are delimited by start and end tags. Elements can be nested to any depth. An element inside another one is said to be a subelement or child. The first element in every xml document is called the root element. An xml document can only have one root element.
+> XML is a generalized way of describing hierarchical structured data. An xml document contains one or more **elements**, which are delimited by **start** and **end** **tags**.
 
-> Elements can have attributes, which are name-value pairs. Attributes are listed within the start tag of an element and separated by whitespace. Attribute names can not be repeated within an element. Attribute values must be quoted. You may use either single or double quotes.
+```xml
+<s>This is a sentence.</s>
+```
+
+> Elements can be nested to any depth. An element inside another one is said to be a subelement or **child**. The first element in every xml document is called the **root** element. An xml document can only have one root element.
+
+```xml
+<s>
+    <token>This</token>
+    <token>is</token>
+    <token>a</token>
+    <token>sentence</token>
+    <token>.</token>
+</s>
+```
+> Elements can have **attributes**, which are name-value pairs. Attributes are listed within the start tag of an element and separated by whitespace. Attribute names can not be repeated within an element. Attribute values must be quoted. You may use either single or double quotes.
+
+```xml
+<s id="s_0">
+    <token pos1="DT" pos2="DET">This</token>
+    <token pos1="VBZ" pos2="VERB">is</token>
+    <token pos1="DT" pos2="DET">a</token>
+    <token pos1="NN" pos2="NOUN">sentence</token>
+    <token pos1="." pos2="PUNCT">.</token>
+</s>
+```
 
 > If an element has more than one attribute, the ordering of the attributes is not significant. An element’s attributes form an unordered set of keys and values, like a Python dictionary. There is no limit to the number of attributes you can define on each element.
 
-> Elements can have text content. Elements that contain no text and no children are empty. Elements that contain text and children elements are said to contain mixed content.
+```xml
+<s id="s_0">
+    <token pos1="DT" pos2="DET">This</token>
+    <token pos2="VERB" pos1="VBZ">is</token>
+    <token pos1="DT" pos2="DET">a</token>
+    <token pos2="NOUN" pos1="NN">sentence</token>
+    <token pos1="." pos2="PUNCT">.</token>
+</s>
+```
+
+> Elements can have **text content**. Elements that contain no text and no children are **empty**. Elements that contain text and children elements are said to contain **mixed content**.
+
+```xml
+<s>This is a sentence.</s>
+```
+
+```xml
+<comment type="gesture"/>
+```
+
+```xml
+<s>This is a sentence with <italics>mixed</italics> content.</s>
+```
 
 > Finally, xml documents can contain character encoding information on the first line, before the root element.
 
-<!-- http://www.diveintopython3.net/xml.html -->
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<s>
+    <token>This</token>
+    <token>is</token>
+    <token>a</token>
+    <token>sentence</token>
+    <token>.</token>
+</s>
+```
+
+(Mark Pilgrim. *Dive Into Python 3*. <http://www.diveintopython3.net/xml.html>)
 
 ### Well-formed and valid
 
@@ -88,10 +146,6 @@ If used properly, **XML** schemas can help you to detect annotation inconsistenc
 
 There are different ways to define documents out there. My favorite schema language is **Relax NG compact**: it is quite easy to understand, write, and read. It is much more powerful than DTDs, but at the same time easier than other **XML** schema languages.
 
-To get started check this [tutorial](http://www.relaxng.org/compact-tutorial-20030326.html).
-
-<!-- Add here your reference links from GECCo metadata revision -->
-
 #### Validating XML
 
 Some **XML** editors allow the validation of **XML** files using a DTD or **XML** schema.
@@ -100,21 +154,9 @@ Some **XML** editors allow the validation of **XML** files using a DTD or **XML*
 
 <!-- just work with the TCF Validator, to illustrate the point will be enough https://weblicht.sfs.uni-tuebingen.de/tcf-validator/ -->
 
-If you have many files to validate you probably want to use a command line tool. [`jing`](<https://github.com/relaxng/jing-trang>) is the best known for Relax NG Schema compact format. There is a python wrapper for jing-trang tools <https://pypi.python.org/pypi/jingtrang>, which allows you to validate XML files using Relax NG compact files.
+If you have many files to validate, you probably want to use a command line tool like `xmllint`. It is included in [`libxml2`](<http://www.xmlsoft.org/downloads.html>). A library that you would need anyway, if you want to work with `lxml` package locally.
 
-You can install it through `pip` if you have `java`:
-
-```shell
-pip install jingtrang
-```
-
-To validate an XML file against a Relax NG compact schema run the following command:
-
-```shell
-pyjing -c schema.rnc file.xml
-```
-
-You can also install `jing` directly without the python wrapper. The syntax is the same. In Mac OS X you can install it with [homebrew](http://brew.sh) `brew cask install jing`. In Ubuntu there is a package called jing-trang `sudo apt-get install jing-trang`. If you are working in Windows you have to compile it from source <https://github.com/relaxng/jing-trang>.
+If you work with Relax NG Schema compact, you can use [`jing`](<https://github.com/relaxng/jing-trang>). There is also a python wrapper for jing-trang tools <https://pypi.python.org/pypi/jingtrang>.
 
 ## Python and XML/HTML
 
@@ -140,17 +182,17 @@ There are also a few packages not included in the standard library which are ver
 
 ### Setting up the environment
 
-We are going to use `beautifulsoup4`, `lxml` and `html5lib`. These packages are not part of python's standard library. We need to install them by using `pip`, the python package manager.
+We are going to use `lxml` and `beautifulsoup4`. These packages are not part of python's standard library. We need to install them by using `pip`, the python package manager.
 
 Go to the Shell Terminals in the cloud.
 
-Install lxml:
+Install `lxml`:
 
 ```shell
 sudo rpm --rebuilddb && sudo yum install -y libxml2-devel libxslt-devel && pip install lxml
 ```
 
-Then, install beautifulsoup:
+Then, install `beautifulsoup4`:
 
 ```shell
 pip install beautifulsoup4
@@ -160,21 +202,236 @@ pip install beautifulsoup4
 
 ## Working with XML
 
-### Read a XML file
+### Read XML from a string
+
+<!-- @instructor: tweak the XML input to show different errors, and how the errors break the script. Examples:
+
+- add a second root element
+- remove a closing tag
+- change an opening token tag to taken
+- remove the quotation marks of an attribute
+- write an element hows tag starts by an invalid character
+- insert a sentence element wrong
+- insert sentence elements right
+- insert an ampersand
+- use the ampersand entity
+- put opening tag in upper case, and leave closing tag in lowercase
+-->
 
 ```python
 from bs4 import BeautifulSoup
 
-xmlsource = <text><token id="1">Hello</token><token id="2">World</token></text>
+xmlsource = '''<?xml version="1.0" encoding="UTF-8"?>
+<TextCorpus lang="de">
+    <text>Karin fliegt nach New York. Sie will dort Urlaub machen.</text>
+    <tokens>
+        <token ID="t_0">Karin</token>
+        <token ID="t_1">fliegt</token>
+        <token ID="t_2">nach</token>
+        <token ID="t_3">New</token>
+        <token ID="t_4">York</token>
+        <token ID="t_5">.</token>
+        <token ID="t_6">Sie</token>
+        <token ID="t_7">will</token>
+        <token ID="t_8">dort</token>
+        <token ID="t_9">Urlaub</token>
+        <token ID="t_10">machen</token>
+        <token ID="t_11">.</token>
+    </tokens>
+</TextCorpus>'''
 
 soup = BeautifulSoup(xmlsource, 'xml')
 
 print(soup.prettify())
 ```
 
-### Challenge
+Cool! That's nice. Let's get familiar with our soup.
+
+### Common operations
+
+#### The basics
+
+Elements are `Tag` objects.
+
+Get the tokens element.
+
+```python
+soup.tokens
+```
+
+Get a token element just by using the element name:
+
+```python
+atoken = soup.token
+```
+
+Every tag has a `name`:
+
+```python
+atoken.name
+```
+
+A tag may have attributes or `attrs`. Attributes are like a dictionary:
+
+```python
+atoken.attrs
+```
+
+```python
+atoken['ID']
+```
+
+A tag can contain text or `string`. This content is seen as a unicode string.
+
+<!-- but this only works for text content, with mixed content it doesn't -->
+
+```python
+atoken.string
+```
+
+A tag has `contents`, which is the same as a list of text and/or children.
+
+```python
+soup.tokens.contents
+```
+
+#### Finding things
+
+Find elements using a string
+
+```python
+all_tokens = soup.find_all('token')
+```
+
+Find elements using a regexp
+
+```python
+import re
+for tag in soup.find_all(re.compile("^text")):
+    print(tag.name)
+```
+
+Find elements considering an attribute:
+```python
+soup.find_all('token',ID="t_1")
+soup.find_all('token',ID=re.compile('^t_1'))
+```
+
+Find elements using a list
+
+```python
+soup.find_all(['text','token'])
+```
+
+Get all tags in a document
+
+```python
+for tag in soup.find_all(True):
+    print(tag.name)
+```
+
+Find a particular string:
+
+```python
+soup.find_all('token', string="Urlaub")
+```
+
+To find just one, use `find`:
+
+```python
+soup.find('token')
+soup.find_all('token')
+```
+
+#### Finding members of the family
+
+With `find_all` we find all the descendants.
+
+Get only direct children
+
+```python
+soup.find_all(True,recursive=False)
+```
+
+Get the parent and ancestors of an element
+
+```python
+token = soup.find('token')
+token.find_parent(True)
+token.find_parents(True)
+```
+
+Get the siblings
+
+```python
+next_token = token.find_next_sibling()
+next_token
+token.find_next_siblings()
+next_token.find_previous_sibling()
+```
+
+Get all siblings
+
+```python
+for sibling in soup.token.next_siblings:
+    print(sibling)
+for sibling in soup.token.find(ID="t_3").previous_siblings:
+    print(sibling)
+```
+
+### Read a XML file
+
+```python
+soup = BeautifulSoup(open('../../tcf04-karin-wl.xml', 'r', encoding='utf-8'), 'xml')
+
+
+
+```
+
+### Extracting Info
+
+### Challenges
+
+- reconstruct the text from `tokens`, so `text == tokens`
+- find all nouns, print the POS tag
+- find all nouns, retrieve word forms, print the text of the token
+- find all nouns, check condition, retrieve POS tag of previous token
+
+
+### Manipulating XML
+
+upper case all tokens
+
+
+add lemmas to tokens
+
+
+
+
 
 ### Challenge
+
+```
+soup = BeautifulSoup(open('tcf04-karin-wl.xml', 'r', encoding='utf-8'), 'xml')
+```
+
+- lower case all tokens
+- change the `tag` 'ID' value, by changing the prefix. Instead of `pt` now should be `postag`.
+- add `length` in characters to `token`
+- add `length` in tokens to `sentence`
+- for each `token` add an attribute called `pos` which should be its value from `tag`.
+- renumber tokens, instead of starting at `0` they should start at `1`
+- remove elements
+- strip tags
+
+### Creating an XML file
+
+### Challenge
+
+- convert VRT file into XML (tokens with attributes)
+- convert VRT file into XML (tokens with attributes and IDs)
+- convert VRT file into XML (sentences with IDs, tokens with attributes and IDs)
+- convert VRT file into XML (sentences with IDs and lenght in tokens, tokens with attributes and IDs)
 
 ## Summary
 
@@ -202,11 +459,45 @@ We have just scratched the surface today. If you want to learn more, you can sta
 - **XML** article in the Wikipedia <https://en.wikipedia.org/wiki/XML>
 - w3schools.com **XML** tutorial <http://www.w3schools.com/xml/default.asp>
 
+### Relax NG compact
+
+Check this tutorial to get started: <http://www.relaxng.org/compact-tutorial-20030326.html>
+
+To validate XML files using this schema format you can use `jing`.
+
+You can also install `jing` directly without the python wrapper. In Mac OS X you can install it with [homebrew](http://brew.sh) `brew cask install jing`. In Ubuntu there is a package called jing-trang `sudo apt-get install jing-trang`. If you are working in Windows you have to compile it from source <https://github.com/relaxng/jing-trang>.
+
+To validate an XML file you use the following command:
+
+```shell
+jing -c schema.rnc file.xml
+```
+
+If the file is valid, you won't get any message. If there is something wrong, you will some.
+
+There is also a python wrapper. No need to install `jing` and `trang` on your own, but you need `java` to be installed in your computer.
+
+You can install it through `pip`:
+
+```shell
+pip install jingtrang
+```
+
+To validate an XML file against a Relax NG compact schema run the following command:
+
+```shell
+pyjing -c schema.rnc file.xml
+```
+
 ### lxml
 
 If you need better performance and/or you need higher control of what the parser does. Or you are familiar with XPath, and XSLT you might want to give a try to `lxml`.
 
 <http://lxml.de/tutorial.html>
+
+Check [Installing lxml](http://lxml.de/installation.html) for more information. Be aware that `lxml` requires `libxml2` and `libxslt`. [`libxml2`](<http://www.xmlsoft.org/downloads.html>).
+
+If they are not installed in your machine, you will have to install them. In Mac OS X you can install it with [homebrew](http://brew.sh) `brew install libxml2 libxslt`. In Ubuntu there is a package called jing-trang `sudo apt-get install libxml2-dev libxslt1-dev`. If you are working in Windows you have to follow the instructions provided by [Igor Zlatkovic](https://www.zlatkovic.com/libxml.en.html).
 
 ## Bibliography
 
