@@ -16,7 +16,7 @@ Though we'll be working with blank notebooks in our training sessions, everythin
 
 Below is a basic overview of the four-session lesson plan. You can click the headings to view complete versions of the Jupyter Notebooks we'll be using in each session. The materials are always evolving, and pull requests are always welcome.
 
-## [Session 1: Orientation](https://github.com/interrogator/wwc/blob/master/resources/completed-notebooks/nltk-session-1-complete.md)
+## [Session 1: Orientation](https://github.com/interrogator/wwc/blob/master/resources/completed-notebooks/nltk-session-1-complete.ipynb)
 
 In this session, you will learn how to use the Jupyter Notebook, as well as how to complete basic tasks with Python/NLTK. 
 
@@ -32,7 +32,7 @@ In this session, you will learn how to use the Jupyter Notebook, as well as how 
 * Writing functions
 * Creating frequency distributions
 
-## [Session 2: Corpus linguistic tasks](https://github.com/interrogator/wwc/blob/master/resources/completed-notebooks/nltk-session-2-complete.md)
+## [Session 2: Corpus linguistic tasks](https://github.com/interrogator/wwc/blob/master/resources/completed-notebooks/nltk-session-2-complete.ipynb)
 
 In this session, we put our existing skills to work in order to investigate the corpora that come bundled with NLTK. The major kinds of processes we cover are:
 
@@ -43,14 +43,14 @@ In this session, we put our existing skills to work in order to investigate the 
 * Collocates
 * Concordancing
 
-## [Session 3: Working with corpora](https://github.com/interrogator/wwc/blob/master/resources/completed-notebooks/nltk-session-3-complete.md)
+## [Session 3: Working with corpora](https://github.com/interrogator/wwc/blob/master/resources/completed-notebooks/nltk-session-3-complete.ipynb)
 
 * POS tagging
 * Lemmatisation
 * Exploring annotated data
 * Writing a concordancer
 
-## [Session 4: Regular expressions](https://github.com/interrogator/wwc/blob/master/resources/completed-notebooks/nltk-session-4-complete.md)
+## [Session 4: Regular expressions](https://github.com/interrogator/wwc/blob/master/resources/completed-notebooks/nltk-session-4-complete.ipynb)
 
 This lesson focusses on regular expressions, as implemented in Python.
 
@@ -62,13 +62,13 @@ This lesson focusses on regular expressions, as implemented in Python.
   * Cheatsheets
   * Crosswords
 
-## Session 5: HTML and XML
+## [Session 5: HTML and XML](https://github.com/interrogator/wwc/blob/master/resources/completed-notebooks/xml-session-complete.ipynb)
 
-This session introduces HTML and XML formats, and how to manipulate them in Python.
+This session introduces HTML and XML markup, and how they can be manipulated with Python using `beautifulsoup` and `lxml`.
 
-## Session 6: File operations
+## [Session 6: File operations](https://github.com/interrogator/wwc/blob/master/resources/completed-notebooks/files-directories-operations.ipynb)
 
-Python can be used to manipulate local and remote files in complex ways. This session centres on the `os` module.
+Python can be used to work with local and remote files. This session centres on using the `os`, `glob` and `fnmatch` modules to find, create, copy, move and delete files and directories.
 
 ## [Session 7: Getting the most out of what we've learned](https://github.com/interrogator/wwc/blob/master/resources/completed-notebooks/nltk-session-7-complete.md)
 
