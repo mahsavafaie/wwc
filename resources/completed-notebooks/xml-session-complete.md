@@ -41,13 +41,13 @@ We can think of DOM as a tree structure:
 
 **XML** stands for E**X**tensible **M**arkup **L**anguage. This language was designed to store and transport data. And it was designed to be both human- and machine-readable. Unlike HTML the structure of the document, the elements, their attributes, and the content are not pre-defined. That provides a very flexible framework.
 
-> XML is a generalized way of describing hierarchical structured data. An xml document contains one or more **elements**, which are delimited by **start** and **end** **tags**.
+> XML is a generalized way of describing hierarchical structured data. An XML document contains one or more **elements**, which are delimited by **start** and **end** **tags**.
 
 ```xml
 <s>This is a sentence.</s>
 ```
 
-> Elements can be nested to any depth. An element inside another one is said to be a subelement or **child**. The first element in every xml document is called the **root** element. An xml document can only have one root element.
+> Elements can be nested to any depth. An element inside another one is said to be a subelement or **child**. The first element in every XML document is called the **root** element. An XML document can only have one root element.
 
 ```xml
 <s>
@@ -64,13 +64,13 @@ We can think of DOM as a tree structure:
 <s id="s_0">
     <token pos1="DT" pos2="DET">This</token>
     <token pos1="VBZ" pos2="VERB">is</token>
-    <token pos1="DT" pos2="DET">a</token>
-    <token pos1="NN" pos2="NOUN">sentence</token>
-    <token pos1="." pos2="PUNCT">.</token>
+    <token pos1='DT' pos2='DET'>a</token>
+    <token pos1='NN' pos2='NOUN'>sentence</token>
+    <token pos1='.' pos2='PUNCT'>.</token>
 </s>
 ```
 
-> If an element has more than one attribute, the ordering of the attributes is not significant. An element’s attributes form an unordered set of keys and values, like a Python dictionary. There is no limit to the number of attributes you can define on each element.
+> If an element has more than one attribute, the ordering of the attributes is not significant. Element’s attributes form an unordered set of keys and values, like a Python dictionary. There is no limit to the number of attributes you can define on each element.
 
 ```xml
 <s id="s_0">
@@ -84,19 +84,25 @@ We can think of DOM as a tree structure:
 
 > Elements can have **text content**. Elements that contain no text and no children are **empty**. Elements that contain text and children elements are said to contain **mixed content**.
 
+This is an element with text content:
+
 ```xml
 <s>This is a sentence.</s>
 ```
+
+This is an empty element:
 
 ```xml
 <comment type="gesture"/>
 ```
 
+This is an element with mixed content:
+
 ```xml
 <s>This is a sentence with <italics>mixed</italics> content.</s>
 ```
 
-> Finally, xml documents can contain character encoding information on the first line, before the root element.
+> Finally, XML documents can contain character encoding information on the first line, before the root element.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -133,6 +139,8 @@ A document is well-formed if it is compliant with some minimal requirements:
 - attribute values have to be quoted
 - it contains only properly encoded legal Unicode characters
 
+<!-- look for an online validator, HTML is also OK for this purpose -->
+
 #### Valid documents
 
 **HTML** documents have to conform to a particular specification where only a closed set of elements and attributes with particular contents and data types are allowed. Try to use anything else and you will get an error.
@@ -145,6 +153,10 @@ However, the structure and contents of **XML** documents can and have to be defi
 If used properly, **XML** schemas can help you to detect annotation inconsistencies and errors (specially helpful if you are working with data created manually by humans).
 
 There are different ways to define documents out there. My favorite schema language is **Relax NG compact**: it is quite easy to understand, write, and read. It is much more powerful than DTDs, but at the same time easier than other **XML** schema languages.
+
+<!-- show a DTD example and a Relax NG compact schema -->
+
+Learning the basics of writing a DTD or a schema would require a dedicated session.
 
 #### Validating XML
 
