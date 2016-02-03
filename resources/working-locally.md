@@ -2,7 +2,7 @@
 
 During the sessions, we have been working in the cloud. However, you might want to run jupyter notebooks locally. This instructions will guide you to get them running in your computer.
 
-You will need `python3`, `jupyter` and some additional python packages. If you try to use `python2` and the old `ipython` unexpected things will happen. Do not expect us to provide support in that case.
+You will need `python3`, `jupyter` and some additional python packages. If you try to use `python2` and the old `ipython` unexpected things will happen.
 
 We will show you how to:
 
@@ -12,15 +12,15 @@ We will show you how to:
 - which packages you will need to run the notebooks of the WwC python sessions
 - how to work with jupyter notebooks
 
-In this tutorial, we are assuming that you have python3 installed in your machine, if not, follow the install instructions for Windows, Mac OS X, Ubuntu.
-
-You can apply also this instructions in a virtual environment. Using virtual environments is a very good idea. Learn how to do it with the virtualenv tutorial.
+The instructions have been tested for Mac OS X 10.11 El Capitan, Ubuntu 15.10 Wily Werewolf, and Windows 10.
 
 ## Python 3
 
-Check that you have python 3 installed in your computer.
+The first question we need to answer is:
 
-Type in the terminal:
+> Do I have python 3?
+
+You can open a Terminal or Console and type the following command:
 
 ```shell
 python3 --version
@@ -28,28 +28,28 @@ python3 --version
 
 If you get something like `Python 3.5.0`, congratulations! You have python 3 installed in your computer. However, if you get `python3: command not found`, either you don't have python 3 or your OS cannot find it.
 
-### Installing python 3
+If you DO have python 3 already installed in your machine, check the version you have. If the version is >= than 3.4. proceed to section [Python virtual environments](#python-virtual-environments), otherwise, you will need to install pip, go to section [Installing pip](#installing-pip). If you DO NOT have python 3 installed in your computer follow the instructions in section [Installing python 3](#installing-python-3).
 
-Installing python 3 is quite easy. You can find the instructions to install the latest python 3 version in:
 
-- Mac OS X El Capitán
-<!-- - Ubuntu -->
-<!-- - Windows 10 -->
+## Installing python 3
 
-The latest python 3 version comes with `pip`, a python package manager enabling the extension of your python with helpful packages, like jupyter.
+Depending on the platform you are working, you will need to follow a different procedure:
 
-If you use older versions of python3, you will have to install pip in your OS. Check `pip`'s website for further guidance. <http://pip.de>
+- [Mac OS X](#installing-python-3-for-mac-os-x)
+- [Ubuntu](#installing-python-3-for-ubuntu)
+- [Windows](#installing-python-3-for-windows)
 
-If you try with other OS or versions, feel free to add it to this document.
+### Installing python 3 for Mac OS X
 
-#### Installing python 3 for Mac OS X
+Mac OS X comes with a python 2 distribution preinstalled. You still will need python 3. We will use in this tutorial the software manager `homebrew` <http://brew.sh>.
 
-Mac OS X comes with a python 2 distribution preinstalled. You still will need python3. We recommend the software manager `homebrew` <http://brew.sh> to achieve this. You can use it to install many other tools.
-
-1. install Xcode, Command line tools
+1. install Command Line Tools for Xcode
+```shell
+xcode-select --install
+```
 1. install homebrew
 ```shell
-ruby...
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 1. install python3
 ```shell
@@ -64,9 +64,40 @@ brew linkapps python3
 pip3 install yolk
 ```
 
-#### Install python 3 for Ubuntu
+Now, you check again if python 3 is installed by running:
 
-Latest Ubuntu's releases come with Python 3.4 out of the box. The version can be a bit behind the latest official python 3 (3.5) release. But the notebooks should work anyway. You need to install `pip`, the python package manager.
+```shell
+python3 --version
+```
+
+You should see `Python 3.5.0`.
+
+If you were successful go to section [Python virtual environments](#python-virtual-environments).
+
+### Installing python 3 for Ubuntu
+
+Congratulations! Latest Ubuntu's releases come with Python 3.4 out of the box. The version can be a bit behind the latest official python 3 (3.5) release. But the notebooks should work anyway. You need to install `pip`, the python package manager.
+
+Go to [Installing pip](#installing-pip).
+
+### Installing python 3 for Windows
+
+## Installing pip
+
+Check if you already have `pip3` installed running the command below:
+
+```shell
+pip3 --version
+```
+
+If you DO have `pip3` installed go to section [Python virtual environments](#python-virtual-environments).
+If you DO NOT have `pip3` follow this instructions: <http://pip.de>
+
+### Installing pip for Mac OS X
+
+If you followed the instructions to install python 3 with homebrew you don't need to install pip. The latest versions come with pip already.
+
+### Installing pip for Ubuntu
 
 Open a terminal and type:
 
@@ -74,18 +105,20 @@ Open a terminal and type:
 sudo apt-get install python3-pip
 ```
 
-<!--
-#### Install python 3 for Windows 10
+Check again if you already have `pip3` installed running the command below:
 
-There are plenty of python bundles for Windows. However, we recommend you to install the latest official python 3 from the official page.
+```shell
+pip3 --version
+```
 
-1.
-1.
--->
+### Installing pip for Windows
+
 
 ## Python virtual environments
 
-Virtual environments are python setups that you can manage in an isolated way and keep independent from your system python installation. If you have installed the latest python 3 following the instructions above, or you have python 3 >= 3.5, you will have `pip` installed too. Otherwise, install `pip` as explained [here](https://pip.pypa.io/en/stable/installing/).
+We recommend you to work with python virtual environments. If you don't want to use virtual environments go to section [Installing python packages](#installing-python-packages), just remember to use `pip3` command instead of just `pip`.
+
+**What are virtual environments?** Virtual environments are python setups that you can manage in an isolated way and keep independent from your system python installation. If you have installed the latest python 3 following the instructions above, or you have python 3 >= 3.5, you will have `pip` installed too. Otherwise, install `pip` as explained in section [Installing pip](#installing-pip).
 
 Advantages:
 
@@ -99,6 +132,8 @@ At the beginning, it might seem complicated. At the end, you will appreciate it.
 
 ### Installing virtual environments
 
+<!-- this commands work for mac and lin -->
+
 1. install `virtualenv`
 ```shell
 pip3 install virtualenv
@@ -107,6 +142,8 @@ pip3 install virtualenv
 ```shell
 pip3 install virtualenvwrapper
 ```
+
+The next step is to set up `virtualenv` and `virtualenvwrapper`.
 
 ### Setting up virtualenv and virtualenvwrapper
 
@@ -132,6 +169,18 @@ else
 fi
 ```
 
+#### Setting up virtualenv and virtualenvwrapper for Ubuntu
+
+Open a terminal window, and run the following commands:
+
+```shell
+sudo apt-get install virtualenv
+sudo apt-get install virtualenvwrapper
+source .bashrc
+```
+
+#### Setting up virtualenv and virtualenvwrapper for Windows
+
 ### Working with virtual environments
 
 We will show you how to set up a virtual environment for WwC python sessions.
@@ -141,7 +190,7 @@ We will show you how to set up a virtual environment for WwC python sessions.
 You only have to this once.
 
 ```shell
-mkvirtualenv --python=/usr/local/bin/python3 wwc
+mkvirtualenv --python=$(which python3) wwc
 ```
 
 #### Work on the new virtual environment
@@ -162,7 +211,10 @@ deactivate wwc
 
 ## Python packages
 
-You will need to install some packages in your `wwc` environment before you can use our notebooks. Fortunately, from python 3.5 onwards, comes with `pip` already installed.
+### Installing python packages for Mac OS X
+
+
+You will need to install some packages in your `wwc` environment before you can use our notebooks.
 
 Be sure you are working in the appropriate virtual environment:
 
@@ -170,10 +222,12 @@ Be sure you are working in the appropriate virtual environment:
 workon wwc
 ```
 
+If you prefer not to work with virtual environments just follow the instructions below.
+
 Packages installed in a virtual environment
 
 ```shell
-pip freeze
+pip3 freeze
 ```
 
 You will need to install the packages listed in `wwc-dependencies.txt`. Namely:
@@ -186,7 +240,7 @@ You will need to install the packages listed in `wwc-dependencies.txt`. Namely:
 
 ...
 
-### jupyter
+#### jupyter
 
 `jupyter` is a package enabling the usage of jupyter notebooks and `ipython`.
 
@@ -198,15 +252,36 @@ pip3 install jupyter
 
 This procedure will install `jupyter` and many other packages which are dependencies. That's just fine.
 
-### nltk
+#### nltk
 
-### matplotlib
+```shell
+pip3 install nltk
+```
 
-### pandas
+#### matplotlib
 
-### numpy
+```shell
+pip3 install matplotlib
+```
 
-## Working with notebooks
+#### pandas
+
+```shell
+pip3 install pandas
+```
+
+#### numpy
+
+```shell
+pip3 install numpy
+```
+
+### Installing python packages for Ubuntu
+
+### Installing python packages for Windows
+
+
+## Working with jupyter notebooks
 
 We will learn in this session how to:
 
