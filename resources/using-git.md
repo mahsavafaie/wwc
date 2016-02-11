@@ -22,14 +22,94 @@ This means that you can set up a repository even in your laptop to work locally.
 
 GitHub also comes with a very complete documentation, and it has a huge community. So getting help is relatively easy. We will follow GitHub's [documentation](https://help.github.com) to get started.
 
-## Installing git
+## Setting up your environment
+
+### Install Git/GitHub Desktop
+
+To get Git working in your computer and being able to work with GitHub you need:
+
+`if` Mac or Win:
+
+- a [GitHub account](https://github.com/join)
+- to install [GitHub Desktop](https://desktop.github.com) (if you are working with Mac/Win)
+
+`else`:
+
+- to install [Git](https://help.github.com/articles/set-up-git)
+- a [GitHub account](https://github.com/join) (not really necessary, but helpful)
+
+### Installing GitHub Desktop
+
+1. Follow the instructions at the app [guide](https://help.github.com/desktop/guides/getting-started/installing-github-desktop).
+1. Open the app and, you will asked for your GitHub account user and password.
+
+That's it!
+
+### Installing Git
 
 To get started follow the instructions provided in GitHub's [bootcamp](https://help.github.com/articles/set-up-git).
 
-All work with Git can be done from the command line. However, there are different GUIs that will help you to get familiar with Git.
+## Creating a local repository
 
-Take a look at GitHub's [desktop App]() (available for Windows and Mac).
+Say that you are working on some project and you want to use Git. You don't need to create a public repo on GitHub, but just set up one locally.
 
+### From GUI
+
+1. Click on the left corner `+` symbol.
+1. Choose `Add`
+1. Browse to the folder where you want to save your repo
+1. It will ask you if you want to create a repository, provide a Name: `myfirstrepo`
+
+
+### From CLI
+
+1. Make the directory: `mkdir -p ~/myproject/myfirstrepo`
+1. Change to the directory: `cd ~/myproject/myfirstrepo`
+1. Start the repository: `git init`
+
+## Create a File
+
+1. Create a file called `README.md`
+1. Write: `This is a test.`
+1. Save it in your repository.
+
+## Contributing
+
+If you want to have a local copy of a repository in GitHub `interrogator/wwc`, and you might want to contribute to it at some point, you have to *fork* the repository. *Forking* means that you create a copy from the original, and you keep it connected.
+
+### Fork `wwc`
+
+The easiest way to fork a repository is:
+
+1. log in GitHub
+1. go to the URL of the repo: <https://github.com/interrogator/wwc>
+1. click on `Fork`
+1. a copy of the repo will be done for your user in GitHub
+
+### Clone your fork
+
+Clone means to creat a local copy of a remote repository. In this case we are going to clone your fork.
+
+If you clone you can:
+
+- have a local copy of the repo
+- work locally
+- synchronise the local copy with your fork (`synchronise`)
+- synchronise your fork with the original (called `upstream`)
+- submit pull requests (changes) to the original
+
+#### From GUI
+
+https://help.github.com/desktop/guides/contributing/
+
+#### From CLI
+
+1. copy the URL of your fork
+1. write in the shell the following command
+
+```bash
+git clone https://github.com/chozelinek/wwc.git
+```
 
 ## References
 
@@ -40,7 +120,6 @@ Take a look at GitHub's [desktop App]() (available for Windows and Mac).
 - A successful Git [branching model](http://nvie.com/posts/a-successful-git-branching-model)
 - GitHub's [help](https://help.github.com)
 - GitHub's [pages](https://pages.github.com)
-
 
 ------
 <b id="f1">1</b> <https://en.wikipedia.org/wiki/Git_(software)> [↩](#a1)<br/>
