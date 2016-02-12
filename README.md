@@ -76,7 +76,7 @@ It's nice to have your Python code under version control, so that you never lose
 
 * Downloading and installing [GitHub Desktop](https://desktop.github.com)
 * Creating, forking repositories
- * Adding to our lesson materials:
+* Adding to our lesson materials:
  	* Updating READ ME 
  	* Adding student feedback
 
