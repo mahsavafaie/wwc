@@ -70,15 +70,25 @@ This session introduces HTML and XML markup, and how they can be manipulated wit
 
 Python can be used to work with local and remote files. This session centres on using the `os`, `glob` and `fnmatch` modules to find, create, copy, move and delete files and directories.
 
-## [Session 7: Getting the most out of what we've learned](https://github.com/interrogator/wwc/blob/master/resources/completed-notebooks/nltk-session-7-complete.md)
+##[Session 7:  Using Git](https://github.com/interrogator/wwc/blob/master/resources/using-git.md)
+
+It's nice to have your Python code under version control, so that you never lose anything important. In this session, we cover:
+
+* Downloading and installing [GitHub Desktop](https://desktop.github.com)
+* Creating, forking repositories
+ * Adding to our lesson materials:
+ 	* Updating READ ME 
+ 	* Adding student feedback
+
+## [Session 8: Getting the most out of what we've learned](https://github.com/interrogator/wwc/blob/master/resources/completed-notebooks/nltk-session-7-complete.md)
 
 Our final session involves:
 
 * Answering important issues raised by students in earlier sessions
 * Discussing local workflows:
   * How do we get everything set up on own own devices?
-  * How do we get help when things go wrong?
-  * How should I store/share my code?
+ 	* How do we get help when things go wrong?
+ 	* How should I store/share my code?
 * Brainstorming ideas for the future
 
 ## Adding to this repository
