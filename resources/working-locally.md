@@ -82,6 +82,19 @@ Go to [Installing pip](#installing-pip).
 
 ### Installing python 3 for Windows
 
+There are several ways of installing Python 3 in Windows.
+1. Using the official release and `pip`, or
+1. Using a third party distribution like `Anaconda` and its package manager `conda`.
+
+[`Anaconda`](https://www.continuum.io/downloads) is well known and they provide first class software. Be aware that `Anaconda` is maintained by a company (Continuum) and it is released under a freemium license model. As long as the company does well, `Anaconda` will be there.
+
+1. Go to the Downloads page at the official Website <https://www.python.org/downloads/>
+1. Where it reads `Looking for Python with a different OS?`, click on `Windows`
+1. Scroll down until `Python 3.5.1` and then click on Download `Windows x86-64 executable installer`.
+1. Run the installer
+1. Tick the box: `Add Python 3.5 to PATH`
+1. Click on `Install Now`
+
 ## Installing pip
 
 Check if you already have `pip3` installed running the command below:
@@ -95,7 +108,7 @@ If you DO NOT have `pip3` follow this instructions: <http://pip.de>
 
 ### Installing pip for Mac OS X
 
-If you followed the instructions to install python 3 with homebrew you don't need to install pip. The latest versions come with pip already.
+If you followed the instructions to install python 3 with homebrew, you don't need to install pip. The latest versions come with pip already.
 
 ### Installing pip for Ubuntu
 
@@ -113,6 +126,37 @@ pip3 --version
 
 ### Installing pip for Windows
 
+If you followed the instructions to install python 3, you don't need to install pip. The latest versions come with pip already.
+
+### Updating pip
+
+#### UNIX
+
+You might need to update `pip`:
+
+```shell
+pip3 list
+```
+
+If you read something like you could upgrade pip, run:
+
+```shell
+python -m pip3 install --upgrade pip
+```
+
+#### Windows
+
+You might need to update `pip`:
+
+```shell
+pip list
+```
+
+If you read something like you could upgrade pip, run:
+
+```shell
+python -m pip install --upgrade pip
+```
 
 ## Python virtual environments
 
@@ -134,9 +178,21 @@ At the beginning, it might seem complicated. At the end, you will appreciate it.
 
 <!-- this commands work for mac and lin -->
 
+#### UNIX
+
 1. install `virtualenv`
 ```shell
 pip3 install virtualenv
+```
+1. install `virtualenvwrapper` (to ease `virtualenv` mangagement)
+```shell
+pip3 install virtualenvwrapper
+```
+
+#### Windows
+1. install `virtualenv`
+```shell
+pip install virtualenv
 ```
 1. install `virtualenvwrapper` (to ease `virtualenv` mangagement)
 ```shell
@@ -190,7 +246,7 @@ We will show you how to set up a virtual environment for WwC python sessions.
 You only have to this once.
 
 ```shell
-mkvirtualenv --python=$(which python3) wwc
+mkvirtualenv --python=python3 wwc
 ```
 
 #### Work on the new virtual environment
@@ -211,6 +267,8 @@ deactivate wwc
 
 ## Python packages
 
+**NOTE**: if you are working **with virtual environments** or **with Windows** you just need to type `python` or `pip`. If you are working **in Mac/Linux**, and you are not using **virtual environments** you will need to use `python3` and `pip3` instead.
+
 ### Installing python packages for Mac OS X
 
 
@@ -227,7 +285,7 @@ If you prefer not to work with virtual environments just follow the instructions
 Packages installed in a virtual environment
 
 ```shell
-pip3 freeze
+pip freeze
 ```
 
 You will need to install the packages listed in `wwc-dependencies.txt`. Namely:
@@ -247,7 +305,7 @@ You will need to install the packages listed in `wwc-dependencies.txt`. Namely:
 Type in the terminal:
 
 ```shell
-pip3 install jupyter
+pip install jupyter
 ```
 
 This procedure will install `jupyter` and many other packages which are dependencies. That's just fine.
@@ -255,25 +313,25 @@ This procedure will install `jupyter` and many other packages which are dependen
 #### nltk
 
 ```shell
-pip3 install nltk
+pip install nltk
 ```
 
 #### matplotlib
 
 ```shell
-pip3 install matplotlib
+pip install matplotlib
 ```
 
 #### pandas
 
 ```shell
-pip3 install pandas
+pip install pandas
 ```
 
 #### numpy
 
 ```shell
-pip3 install numpy
+pip install numpy
 ```
 
 ### Installing python packages for Ubuntu
