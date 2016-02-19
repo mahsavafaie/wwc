@@ -84,9 +84,10 @@ It's nice to have your Python code under version control, so that you never lose
 
 Our final session involves:
 
+
 * Answering important issues raised by students in earlier sessions
 * Discussing local workflows:
-  * How do we get everything set up on own own devices?
+* How do we get everything set up on own own devices?
  	* How do we get help when things go wrong?
  	* How should I store/share my code?
 * Brainstorming ideas for the future
